@@ -1,0 +1,55 @@
+<div class="card card-container">
+	<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+    <p id="profile-name" class="profile-name-card"></p>
+	<form class="form-horizontal" [formGroup]="signupForm" (ngSubmit)="submitForm()">
+		
+		<div class="form-group">
+			<label for="name" class="cols-sm-2 control-label">Your Name</label>
+			<div class="cols-sm-10">
+				<input type="text" class="form-control" name="name" id="name" [formControl]="signupForm.controls['name']"  placeholder="Enter your Name"/>
+			</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['name'].hasError('required') && signupForm.controls['name'].touched">* Name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="email" class="cols-sm-2 control-label">Your Email</label>
+			<div class="cols-sm-10">
+				<input type="text" class="form-control" name="email" id="email" [formControl]="signupForm.controls['email']"  placeholder="Enter your Email"/>
+			</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['email'].hasError('required') && signupForm.controls['email'].touched">* Email is required.</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['email'].hasError('email') && signupForm.controls['email'].touched">* Email is not valid.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="username" class="cols-sm-2 control-label">Username</label>
+			<div class="cols-sm-10">
+				<input type="text" class="form-control" name="username" id="username" [formControl]="signupForm.controls['username']"  placeholder="Enter your Username"/>
+			</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['username'].hasError('required') && signupForm.controls['username'].touched">* Username is required.</div>
+		</div>   
+
+		<div class="form-group">
+			<label for="password" class="cols-sm-2 control-label">Password</label>
+			<div class="cols-sm-10">
+				<input type="password" class="form-control" name="password" id="password" [formControl]="signupForm.controls['password']"  placeholder="Enter your Password"/>
+			</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['password'].hasError('required') && signupForm.controls['password'].touched">* Password is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="confirm_password" class="cols-sm-2 control-label">Confirm Password</label>
+			<div class="cols-sm-10">
+				<input type="password" class="form-control" name="confirm_password" id="confirm_password" [formControl]="signupForm.controls['confirm_password']"  placeholder="Confirm your Password"/>
+			</div>
+			<div class="error-box color_red" *ngIf="signupForm.controls['confirm_password'].hasError('required') && signupForm.controls['confirm_password'].touched">* Confirm password is required.</div>
+			<div class="error-box color_red" *ngIf="!signupForm.controls.confirm_password.valid && signupForm.controls['confirm_password'].touched">* Both passwords not same.</div>
+		</div>
+
+		<div class="form-group ">
+			<button class="btn btn-primary btn-lg btn-block" type="submit" ion-button full [disabled]="!signupForm.valid">Register</button>
+		</div>
+		<div class="login-register">
+            <a href="#">Login</a>
+         </div>
+	</form>
+</div>

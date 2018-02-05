@@ -1,0 +1,51 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+          Add Expense Manager List
+          <ion-icon title="Add sales" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>
+            <ion-row>
+                <ion-col>
+                    <ion-list inset>
+                        <ion-item class="product-item" padding>
+                            <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" [(ngModel)]="expense.date" name="date" pickerFormat="MMM DD YYYY"></ion-datetime>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Quantity" name="quantity" [(ngModel)]="expense.quantity" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-select placeholder="Type" name="type" [(ngModel)]="expense.type">
+                                <ion-option value="expense">Expense</ion-option>
+                                <ion-option value="income">Income</ion-option>
+                            </ion-select>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Description" name="description" [(ngModel)]="expense.description" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Amount" name="amount" [(ngModel)]="expense.amount" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn" full type="submit" [disabled]="expense.myForm">Add Expense Manager</button>
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

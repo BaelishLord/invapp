@@ -1,0 +1,107 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+        Add Purchase Order
+         <ion-icon title="Purchase List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+    </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form_signup">
+            <ion-row>
+                <ion-col>
+                    <ion-list inset>
+                        <ion-item class="product-item" padding>
+                            <ion-label stacked text-start  class="padding_left_0px">Order ID</ion-label>
+                            <ion-input type="text" placeholder="Order ID" name="order_id" disabled required></ion-input>
+                        </ion-item>
+
+                        <ion-row>
+                            <ion-col col-3>
+                                <button class="margin-left-20px" ion-fab mini (click)="addSupplier();">
+                                    <ion-icon name="add"></ion-icon>
+                                </button>
+                            </ion-col>
+                            <ion-col col-9>
+                                <label class="pull-left">Add Supplier</label>
+                            </ion-col>
+                        </ion-row>
+                        <div class="contact-content">
+                            <ion-list inset class="margin_right_0px margin_left_0px">
+                                <ion-row *ngFor="let info of information; let i = index" [attr.data-index]="i" class="margin_left_0px margin_right_0px">
+                                    <ion-col col-12>
+                                        <ion-item class="product-item">
+                                            <ion-input type="text" placeholder="Supplier" [attr.name]="'supplier_'+i" required></ion-input>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-list>
+                        </div>
+
+                        <ion-item class="product-item" padding>
+                            <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" pickerFormat="MMM DD YYYY"></ion-datetime>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-select placeholder="Tax" name="tax">
+                                <ion-option value="nes">NES</ion-option>
+                                <ion-option value="n64">Nintendo64</ion-option>
+                                <ion-option value="ps">PlayStation</ion-option>
+                                <ion-option value="genesis">Sega Genesis</ion-option>
+                                <ion-option value="saturn">Sega Saturn</ion-option>
+                                <ion-option value="snes">SNES</ion-option>
+                            </ion-select>
+                        </ion-item>
+
+                        <ion-row>
+                            <ion-col col-3>
+                                <button class="margin-left-20px" ion-fab mini (click)="addProducts();">
+                                    <ion-icon name="add"></ion-icon>
+                                </button>
+                            </ion-col>
+                            <ion-col col-9>
+                                <label class="pull-left">Add Item</label>
+                            </ion-col>
+                        </ion-row>
+                        <div class="contact-content">
+                            <ion-list inset class="margin_right_0px margin_left_0px">
+                                <ion-row *ngFor="let item of productItem; let i = index" [attr.data-index]="i" class="margin_left_0px margin_right_0px">
+                                    <ion-col col-12>
+                                        <ion-item class="product-item">
+                                            <ion-select placeholder="Product" [attr.name]="'product_'+i">
+                                                <ion-option value="nes">NES</ion-option>
+                                                <ion-option value="n64">Nintendo64</ion-option>
+                                                <ion-option value="ps">PlayStation</ion-option>
+                                                <ion-option value="genesis">Sega Genesis</ion-option>
+                                                <ion-option value="saturn">Sega Saturn</ion-option>
+                                                <ion-option value="snes">SNES</ion-option>
+                                            </ion-select>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-list>
+                        </div>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="No Tax Applicable" disabled required></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Total" disabled required></ion-input>
+                        </ion-item>
+
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn" full type="submit" >Add Purchase Order</button>
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

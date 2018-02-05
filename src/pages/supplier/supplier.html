@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+         <ion-title>
+            Add Supplier
+            <ion-icon title="Supplier List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>
+            <ion-row>
+                <ion-col>
+                    <ion-list inset>
+                        <!-- <div class="" *ngIf="!supplierForm.controls.supplier_name.valid  && (supplierForm.controls.supplier_name.dirty || submitAttempt)">* Please enter valid supplier name.</div> -->
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Supplier Name" [(ngModel)]="supplier.sname" name="sname" (keyup)='keyUp($event);'>
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="supplier.address" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="supplier.phoneno" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn" full type="submit" [disabled]="supplier.myForm">Add Supplier</button>
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

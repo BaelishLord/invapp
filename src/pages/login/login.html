@@ -1,0 +1,47 @@
+<!-- <ion-list>
+
+  <ion-item>
+    <ion-label floating>Username</ion-label>
+    <ion-input [(ngModel)]="username" type="text" value=""></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Password</ion-label>
+    <ion-input [(ngModel)]="password"  type="password" value=""></ion-input>
+  </ion-item>
+
+</ion-list>
+
+<div padding>
+  <button primary block  (click)="login()">Sign In</button>
+</div> -->
+<!-- <ion-view view-title="Login" name="login-view">
+  <ion-content class="padding"> -->
+ <div class="container">
+    <div class="card card-container">
+        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        <p id="profile-name" class="profile-name-card"></p>
+        <form class="form_signup" [formGroup]="authForm" (ngSubmit)="submitForm()">
+            <span id="reauth-email" class="reauth-email"></span>
+            <div class="form-group">
+                <input type="text" id="inputEmail" [formControl]="authForm.controls['username']" class="form-control" placeholder="Username" required autofocus>
+                <div class="error-box color_red" *ngIf="authForm.controls['username'].hasError('required') && authForm.controls['username'].touched">* Username is required.</div>
+            </div>
+            <div class="form-group">
+                <input type="password" id="inputPassword" [formControl]="authForm.controls['password']" class="form-control" placeholder="Password" required>
+                <div class="error-box color_red" *ngIf="authForm.controls['password'].hasError('required') && authForm.controls['password'].touched">* Password is required!</div>
+            </div>
+            <div id="remember" class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" ion-button full [disabled]="!authForm.valid">Login</button>
+        </form>
+        <a href="javascript:;" class="forgot-password">
+            Forgot the password?
+        </a>
+    </div>
+</div>
+<!-- </ion-content>
+</ion-view> -->

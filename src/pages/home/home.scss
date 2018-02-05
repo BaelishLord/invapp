@@ -1,0 +1,18 @@
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
+
+
+.wrapper {
+  display: grid;
+  /*grid-template-columns: 100px 100px 100px;*/
+  background-color: #fff;
+  color: #444;
+}
+
+.box {
+  background-color: #444;
+  color: $primary-color;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
+}

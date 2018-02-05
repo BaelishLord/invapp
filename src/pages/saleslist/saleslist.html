@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Sales List
+      <ion-icon title="Add sales" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)='clickLink();'></ion-icon>
+    </ion-title>
+    
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngIf="!selectedItem">
+        <ion-item-sliding *ngFor="let sales of salesArray">
+            <ion-item nopadding (click)="itemTapped($event, sales)">
+                <div class="item-note" item-start>
+                    <ion-icon ios="ios-paper" md="md-paper"></ion-icon>
+                    {{sales.name}}
+                </div>
+            </ion-item>
+            <ion-item-options side="right">
+                <button ion-button color="danger" (click)="deleteData(sales.rowid)">
+                  <ion-icon name="trash"></ion-icon>
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+    <!-- <ion-list *ngIf="!selectedItem">
+        <button ion-item *ngFor="let sales of salesArray" >
+            <div class="item-note" item-start (click)="itemTapped($event, sales)">
+                {{sales.name}}&nbsp;&nbsp;{{sales.product}}&nbsp;&nbsp;{{sales.sprice}}
+            </div>
+            <ion-icon ios="ios-trash" md="md-trash" item-end (click)="deleteData(sales.rowid)"></ion-icon>
+        </button>
+    </ion-list> -->
+    <div *ngIf="selectedItem">
+        <ion-card>
+            <!-- <ion-card-header>Sales Details</ion-card-header> -->
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Customer Name</h2>
+                <p class="text_align_left">{{selectedItem.name}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Product</h2>
+                <p class="text_align_left">{{selectedItem.product}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Quanity</h2>
+                <p class="text_align_left">{{selectedItem.squantity}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Price</h2>
+                <p class="text_align_left">{{selectedItem.sprice}}</p>
+            </ion-item>
+        </ion-card>
+    </div>
+    <!-- <ion-fab right bottom>
+        <button ion-fab color="light">
+           <ion-icon name="search"></ion-icon>
+        </button>
+    </ion-fab> -->
+</ion-content>

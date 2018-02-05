@@ -1,0 +1,43 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            Add Sales Order
+            <ion-icon title="Sales List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>
+            <ion-row>
+                <ion-col>
+                    <ion-list inset>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Customer Name" [(ngModel)]="sales.name" name="name" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-select placeholder="Product" [(ngModel)]="sales.product" name="product">
+                                <ion-option *ngFor="let product of productArray" value="{{product.pname}}">{{product.pname}}</ion-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Quantity" [(ngModel)]="sales.squantity" name="squantity" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Price" [(ngModel)]="sales.sprice" name="sprice" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn" full type="submit" [disabled]="sales.myForm">Add Sales Order</button>
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

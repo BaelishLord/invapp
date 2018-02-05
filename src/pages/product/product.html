@@ -1,0 +1,70 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            Add Product
+            <ion-icon title="Product List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>
+            <ion-row class="content_block">
+                <ion-col>
+                    <ion-list inset>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Product Name" [(ngModel)]="product.pname" name="pname" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Product ID" [(ngModel)]="product.pid" name="pid" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-select placeholder="Product Supplier" [(ngModel)]="product.psupplier" name="psupplier">
+                                <ion-option *ngFor="let supplier of supplierArray" value="{{supplier.sname}}">{{supplier.sname}}</ion-option>
+                            </ion-select>
+                        </ion-item>
+                         <ion-item class="product-item" padding>
+                            <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Quantity" [(ngModel)]="product.pquantity" name="pquantity" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Average Price" [(ngModel)]="product.pprice" name="pprice" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row class="media_block" >
+                <ion-col>
+                    <ion-list inset>
+                        <ion-item class="border_radius_10px margin_bottom_10px">
+                            <ion-buttons>
+                                <button type="button" ion-button icon-left color="secondary" (click)="presentActionSheet()">
+                                    <ion-icon name="camera"></ion-icon><span class="font_size_12px">Select Image</span>
+                                </button>
+                                <!-- <button ion-button icon-left color="secondary" (click)="uploadImage()" [disabled]="lastImage === null">
+                                    <ion-icon name="cloud-upload"></ion-icon><span class="font_size_12px">Upload</span>
+                                </button> -->
+                            </ion-buttons>
+                        </ion-item>
+                        <ion-item class="product-item">     
+                            <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
+                            <h3 [hidden]="lastImage !== null">Please Select Image!</h3>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn add_product" full type="submit" [disabled]="product.myForm">Add Product</button>
+                    <!-- <button ion-button class="submit-btn continue" full type="button" *ngIf="setHideShow == false" (click)="hideShowDiv()">Continue</button> -->
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

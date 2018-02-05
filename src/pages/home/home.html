@@ -1,0 +1,79 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Home</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<!-- <ion-content padding>
+  <h3>Ionic Menu Starter</h3>
+
+  <p>
+    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
+  </p>
+
+  <button ion-button secondary menuToggle>Toggle Menu</button>
+</ion-content> -->
+
+<!-- <div class="wrapper padding">
+    <div class="row">
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Product</div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Purchase</div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Supplier</div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Users</div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Sales</div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">
+            <div class="box height_100px te text-center">Manager</div>
+        </div>
+    </div>
+</div>
+ -->
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12>
+                <div class="box height_100px text-center supplier_div" (click)='clickLink("supplier");'>
+                    <a href="javascipt:;">Supplier</a>
+                </div>
+            </ion-col>
+            <ion-col col-12>
+                <div class="box height_100px text-center product_div" (click)='clickLink("product");'>
+                    <a href="javascript:;">Product</a>
+                </div>
+            </ion-col>
+           <!--  <ion-col col-12>
+                <div class="box height_100px text-center purchase_div" (click)='clickLink("purchsae");'>
+                    <a href="javascipt:;">Purchase</a>
+                </div>
+            </ion-col> -->
+            <ion-col col-12>
+                <div class="box height_100px text-center sales_div" (click)='clickLink("sales");'>
+                    <a href="javascipt:;">Sales</a>
+                </div>
+            </ion-col>
+            <!-- <ion-col col-12>
+                <div class="box height_100px text-center users_div" (click)='clickLink("users");'>
+                    <a href="javascipt:;">Users</a>
+                </div>
+            </ion-col> -->
+            <ion-col col-12>
+                <div class="box height_100px text-center manager_div" (click)='clickLink("manager");'>
+                    <a href="javascipt:;">Expense Manager</a>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
