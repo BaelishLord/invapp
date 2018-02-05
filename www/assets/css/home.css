@@ -1,0 +1,40 @@
+
+
+.wrapper {
+  display: grid;
+  /*grid-template-columns: 100px 100px 100px;*/
+  background-color: #fff;
+  color: #444;
+}
+
+.box {
+  /*background-color: #444;*/
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
+}
+
+.box a {
+  color :#fff !important;
+  text-decoration: none !important;
+}
+
+.product_div {
+  background-color : #9e1dc7; 
+}
+.purchase_div {
+  background-color : #488aff; 
+}
+.sales_div {
+  background-color : #50d679; 
+}
+.supplier_div {
+  background-color : #d65050; 
+}
+.manager_div {
+  background-color : #d04cb3; 
+}
+.users_div {
+  background-color : #f5ab3d; 
+}

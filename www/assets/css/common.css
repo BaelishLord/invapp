@@ -1,0 +1,84 @@
+/*---------------------initial------------------------------*/
+	body {
+		/*overflow-y: scroll;*/
+	}
+/*---------------------initial------------------------------*/
+
+/*---------------------height------------------------------*/
+	.height_100px {
+		height : 100px;
+	}
+/*---------------------height------------------------------*/
+
+/*---------------------padding------------------------------*/
+	.padding {
+		padding : 10px;
+	}
+	.padding_bottom_10px {
+		padding-bottom: 10px;
+	}
+	.padding_left_0px {
+		padding-left: 0px !important;
+	}
+/*---------------------padding------------------------------*/
+
+/*---------------------main css------------------------------*/
+	.content-md {
+	    color: #000;
+	    background-color: #f5f5f5 !important;
+	}
+/*---------------------main css------------------------------*/
+
+/*---------------------margin css------------------------------*/
+	.margin-left-20px {
+		margin-left: 20px !important;
+	}
+	.margin_left_0px {
+		margin-left: 0px !important;
+	}
+	.margin_right_0px {
+		margin-right: 0px !important;
+	}
+	.margin_bottom_10px {
+		margin-bottom: 10px !important;
+	}
+/*---------------------margin css------------------------------*/
+
+/*---------------------labels css------------------------------*/
+	.label {
+	    color: #000 !important;
+	}
+	.item-md {
+	    background-color: #f4f4f4 !important;
+	}
+/*---------------------labels css------------------------------*/
+
+/*---------------------text css------------------------------*/
+	.text-start {
+		text-align: start !important;
+	}
+/*---------------------text css------------------------------*/
+
+/*---------------------border css------------------------------*/
+	.border_bottom {
+		border-bottom: 1px solid #ddd;
+	}
+	.border_radius_10px {
+		border-radius: 10px !important;
+	}
+	.list-md .item-block .item-inner {
+	     border-bottom: none !important; 
+	}
+/*---------------------border css------------------------------*/
+
+/*---------------------font css------------------------------*/
+	.font_size_12px {
+		font-size : 1rem !important;
+	}
+/*---------------------font css------------------------------*/
+
+/*---------------------text align css------------------------------*/
+	.text_align_left {
+		text-align: left !important;
+	}
+/*---------------------text align css------------------------------*/
