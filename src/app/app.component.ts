@@ -4,18 +4,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 
-import { HomePage } from '../pages/home/home';
 // import { LoginPage } from '../pages/login/login';
 // import { RegisterPage } from '../pages/register/register';
-// import { SupplierPage } from '../pages/supplier/supplier';
-// import { ProductPage } from '../pages/product/product';
-// import { ExpenseManagerPage } from '../pages/expensemanager/expensemanager';
-// import { PurchasePage } from '../pages/purchase/purchase';
-// import { SalesPage } from '../pages/sales/sales';
+import { HomePage } from '../pages/home/home';
 import { ProductListPage } from '../pages/productlist/productlist';
 import { SupplierListPage } from '../pages/supplierlist/supplierlist';
-// import { PurchaseListPage } from '../pages/purchaselist/purchaselist';
 import { SalesListPage } from '../pages/saleslist/saleslist';
+import { PaymentListPage } from '../pages/paymentlist/paymentlist';
 import { ExpenseManagerListPage } from '../pages/expensemanagerlist/expensemanagerlist';
 
 @Component({
@@ -25,19 +20,19 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
 
-  rootPage: any = HomePage;
+    rootPage: any = HomePage;
 
-  pages: Array<{title: string, component: any}>;
-
+    pages: Array<{title: string, component: any}>;
+    public alertPresented: any;
     constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController) {
         this.initializeApp();
-
+        this.alertPresented = false
         // used for an example of ngFor and navigation
         this.pages = [
             { title: 'Home', component: HomePage },
             { title: 'Supplier', component: SupplierListPage },
             { title: 'Product', component: ProductListPage },
-            // { title: 'Purchase', component: PurchaseListPage },
+            { title: 'Payment Histoy', component: PaymentListPage },
             { title: 'Sales', component: SalesListPage },
             { title: 'Expense Manager', component: ExpenseManagerListPage }
         ];
@@ -52,26 +47,30 @@ export class MyApp {
             this.splashScreen.hide();
 
             this.platform.registerBackButtonAction(() => {
-            //     console.log("sdfsdfsdfsdfsdfsdfsdfsdsdfs")
-                let alert = this.alertCtrl.create({
-                    title: 'Exit App',
-                    message: 'Are you sure you want to exit app?',
-                    buttons: [
-                        {
-                            text: 'Exit',
-                            handler: () => {
-                               this.platform.exitApp();
+                if(!this.alertPresented) {
+                    this.alertPresented = true;
+                    let alert = this.alertCtrl.create({
+                        title: 'Exit App',
+                        message: 'Are you sure you want to exit app ?',
+                        buttons: [
+                            {
+                                text: 'Cancel',
+                                role: 'cancel',
+                                handler: () => {
+                                    this.alertPresented = false;
+                                    // console.log('Cancel clicked');
+                                }
+                            },{
+                                text: 'Exit',
+                                handler: () => {
+                                    this.alertPresented = false;
+                                    this.platform.exitApp();
+                                }
                             }
-                        },{
-                            text: 'Cancel',
-                            role: 'cancel',
-                            handler: () => {
-                              console.log('Cancel clicked');
-                            }
-                        }
-                    ]
-                });
-                alert.present();
+                        ]
+                    });
+                    alert.present();
+                }
             });
 
         });

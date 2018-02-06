@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Payment History List
+      <ion-icon title="Add payement" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)='clickLink();'></ion-icon>
+    </ion-title>
+    
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngIf="!selectedItem">
+        <ion-item class="item_list_align" *ngFor="let payment of paymentArray" (click)="itemTapped($event, payment)">
+            <ion-icon name="leaf" item-start></ion-icon>
+            {{payment.product}}
+        </ion-item>
+    </ion-list>
+    <div *ngIf="selectedItem">
+        <ion-card>
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Product Name</h2>
+                <p class="text_align_left">{{selectedItem.product}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Date</h2>
+                <p class="text_align_left">{{selectedItem.pdate}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Paid Amount</h2>
+                <p class="text_align_left">{{selectedItem.amount}}</p>
+            </ion-item>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row>
+        </ion-card>
+    </div>
+    <!-- <ion-fab right bottom>
+        <button ion-fab color="light">
+           <ion-icon name="search"></ion-icon>
+        </button>
+    </ion-fab> -->
+</ion-content>

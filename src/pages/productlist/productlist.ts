@@ -101,8 +101,9 @@ export class ProductListPage {
                         }).then((db: SQLiteObject) => {
                             db.executeSql('DELETE FROM product WHERE rowid=?', [rowid])
                             .then(res => {
-                              console.log(res);
-                              this.getData();
+                                console.log(res);
+                                this.selectedItem = false;
+                                this.getData();
                             })
                         .catch(e => console.log(e));
                         }).catch(e => console.log(e));

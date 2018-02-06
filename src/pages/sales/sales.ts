@@ -23,10 +23,12 @@ export class SalesPage {
     information = [];
     productItem = [];
 
-    sales = {name: "", product: "", squantity:"", sprice:"", myForm: true};
+    sales = {name: "", product: "", squantity:"", sprice:"", myForm: true, todaydate: new Date()};
     productArray: any = [];
+    // let date = new Date();
     constructor(public navCtrl: NavController, public navParams: NavParams, private fb: FormBuilder, private sqlite: SQLite, private toast: Toast) {
         this.sales.myForm = true;
+        // this.sales.todaydate = new Date();
         // this.myForm = fb.group({
         //     name: ['', Validators.required]
         // });
@@ -47,19 +49,18 @@ export class SalesPage {
             location: 'default'
         }).then((db: SQLiteObject) => {
             // db.executeSql('DROP TABLE IF EXISTS expense', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {})
             db.executeSql('CREATE TABLE IF NOT EXISTS sales(rowid INTEGER PRIMARY KEY, name TEXT, product TEXT, squantity INTEGER, sprice INTEGER)', {})
             .then(res => {
                 console.log(res);
+                db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.sales.todaydate,this.sales.squantity,'income',this.sales.product,this.sales.sprice])
                 db.executeSql('INSERT INTO sales VALUES(NULL,?,?,?,?)',[this.sales.name,this.sales.product,this.sales.squantity,this.sales.sprice])
                 .then(res => {
                     console.log(res);
                     this.navCtrl.setRoot(SalesListPage);
-                  // this.getData();
-                })
-                .catch(e => console.log(e));
+                }).catch(e => console.log(e));
 
-            })
-            .catch(e => console.log(e));
+            }).catch(e => console.log(e));
             
         }).catch(e => console.log(e));
     }
@@ -102,14 +103,6 @@ export class SalesPage {
           //   }
           // );
         });
-    }
-
-    addSupplier() {
-        this.information.push(new productInfo());
-    }
-
-    addProducts() {
-        this.productItem.push(new productInfo());
     }
 
     clickLink(type) {

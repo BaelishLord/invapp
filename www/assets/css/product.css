@@ -38,7 +38,7 @@ ion-row {
 }
 
 .item-inner {
-   border-bottom-color: #ffffff !important;
+   /*border-bottom-color: #ffffff !important;*/
    box-shadow: none !important;
 }
 

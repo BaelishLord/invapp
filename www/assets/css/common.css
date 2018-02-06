@@ -67,7 +67,7 @@
 		border-radius: 10px !important;
 	}
 	.list-md .item-block .item-inner {
-	     border-bottom: none !important; 
+	     /*border-bottom: none !important; */
 	}
 /*---------------------border css------------------------------*/
 
@@ -79,6 +79,9 @@
 
 /*---------------------text align css------------------------------*/
 	.text_align_left {
+		text-align: left !important;
+	}
+	.item_list_align .label {
 		text-align: left !important;
 	}
 /*---------------------text align css------------------------------*/

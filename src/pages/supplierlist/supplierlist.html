@@ -13,48 +13,36 @@
 
 <ion-content>
     <ion-list *ngIf="!selectedItem">
-        <ion-item-sliding *ngFor="let supplier of suppliersArray">
-            <ion-item nopadding (click)="itemTapped($event, supplier)">
-                <div class="item-note" item-start>
-                    <ion-icon ios="ios-person" md="md-person"></ion-icon>
-                    {{supplier.sname}}
-                </div>
-            </ion-item>
-            <ion-item-options side="right">
-                <button ion-button color="danger" (click)="deleteData(supplier.rowid)">
-                  <ion-icon name="trash"></ion-icon>
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
+        <ion-item class="item_list_align" *ngFor="let supplier of suppliersArray" (click)="itemTapped($event, supplier)">
+            <ion-icon name="leaf" item-start></ion-icon>
+            {{supplier.sname}}
+        </ion-item>
     </ion-list>
-    <!-- <ion-list *ngIf="!selectedItem">
-        <button ion-item *ngFor="let supplier of suppliersArray" >
-            <div class="item-note" item-start (click)="itemTapped($event, supplier)">
-                {{supplier.name}}
-            </div>
-            <ion-icon ios="ios-trash" md="md-trash" item-end (click)="deleteData(supplier.rowid)"></ion-icon>
-        </button>
-    </ion-list> -->
     <div *ngIf="selectedItem">
         <ion-card>
-            <!-- <ion-card-header>Supplier Details</ion-card-header> -->
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Name</h2>
                 <p class="text_align_left">{{selectedItem.sname}}</p>
             </ion-item>
-
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Address</h2>
                 <p class="text_align_left">{{selectedItem.address}}</p>
             </ion-item>
-
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Phone Number</h2>
                 <p class="text_align_left">{{selectedItem.phoneno}}</p>
             </ion-item>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row>
         </ion-card>
     </div>
     <!-- <ion-fab right bottom>

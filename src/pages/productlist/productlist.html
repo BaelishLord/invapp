@@ -13,28 +13,15 @@
 
 <ion-content>
     <ion-list *ngIf="!selectedItem">
-        <ion-item-sliding *ngFor="let product of productArray">
-            <ion-item nopadding (click)="itemTapped($event, product)">
-                <div class="item-note" item-start>
-                    <ion-icon ios="logo-buffer" md="logo-buffer"></ion-icon>
-                    {{product.pname}}&nbsp;&nbsp;&nbsp;&nbsp;&#8377;{{product.pprice}}
-                </div>
-            </ion-item>
-            <ion-item-options side="right">
-                <button ion-button color="danger" (click)="deleteData(product.rowid)">
-                  <ion-icon name="trash"></ion-icon>
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
+        <ion-item class="item_list_align" *ngFor="let product of productArray" (click)="itemTapped($event, product)">
+            <ion-avatar item-start>
+                <img src="{{product.file}}">
+            </ion-avatar>
+            <h2>{{product.pname}}</h2>
+            <p>&#8377;{{product.pprice}}</p>
+            <ion-note item-end>{{product.pdate | date}}</ion-note>
+        </ion-item>
     </ion-list>
-    <!-- <ion-list *ngIf="!selectedItem">
-        <button ion-item *ngFor="let product of productArray" >
-            <div class="item-note" item-start (click)="itemTapped($event, product)">
-                {{product.pname}}&nbsp;&nbsp;{{product.pdate}}&nbsp;&nbsp;{{product.pprice}}
-            </div>
-            <ion-icon ios="ios-trash" md="md-trash" item-end (click)="deleteData(product.rowid)"></ion-icon>
-        </button>
-    </ion-list> -->
     <div *ngIf="selectedItem">
         <ion-card>
             <!-- <ion-card-header>Product Details</ion-card-header> -->
@@ -74,6 +61,14 @@
                 <h2 class="text_align_left">Product Price</h2>
                 <p class="text_align_left">{{selectedItem.pprice}}</p>
             </ion-item>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row>
         </ion-card>
     </div>
     <!-- <ion-fab right bottom>

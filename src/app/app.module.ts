@@ -11,11 +11,13 @@ import { SupplierPage } from '../pages/supplier/supplier';
 import { ExpenseManagerPage } from '../pages/expensemanager/expensemanager';
 // import { PurchasePage } from '../pages/purchase/purchase';
 import { SalesPage } from '../pages/sales/sales';
+import { PaymentPage } from '../pages/payment/payment';
 import { ProductListPage } from '../pages/productlist/productlist';
 import { SupplierListPage } from '../pages/supplierlist/supplierlist';
 // import { PurchaseListPage } from '../pages/purchaselist/purchaselist';
 import { SalesListPage } from '../pages/saleslist/saleslist';
 import { ExpenseManagerListPage } from '../pages/expensemanagerlist/expensemanagerlist';
+import { PaymentListPage } from '../pages/paymentlist/paymentlist';
 // import { ModalContentPage } from '../pages/productlist/productlist';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -36,6 +38,7 @@ import { Toast } from '@ionic-native/toast';
     // RegisterPage,
     ProductPage,
     SupplierPage,
+    PaymentPage,
     ExpenseManagerPage,
     // PurchasePage,
     SalesPage,
@@ -43,6 +46,7 @@ import { Toast } from '@ionic-native/toast';
     SupplierListPage,
     // PurchaseListPage,
     SalesListPage,
+    PaymentListPage,
     ExpenseManagerListPage
     // ModalContentPage
   ],
@@ -58,6 +62,7 @@ import { Toast } from '@ionic-native/toast';
     // RegisterPage,
     ProductPage,
     SupplierPage,
+    PaymentPage,
     ExpenseManagerPage,
     // PurchasePage,
     SalesPage,
@@ -65,6 +70,7 @@ import { Toast } from '@ionic-native/toast';
     SupplierListPage,
     // PurchaseListPage,
     SalesListPage,
+    PaymentListPage,
     ExpenseManagerListPage
     // ModalContentPage
   ],

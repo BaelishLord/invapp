@@ -23,24 +23,10 @@ export class SupplierListPage {
     constructor(public navCtrl: NavController, public navParams: NavParams, private sqlite: SQLite, private alertCtrl: AlertController) {
         // If we navigated to this page, we will have an item available as a nav param
         this.selectedItem = navParams.get('item');
-
-        // Let's populate this page with some filler content for funzies
-        this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-        'american-football', 'boat', 'bluetooth', 'build'];
-        
-        // this.items = [];
-        // for (let i = 1; i < 11; i++) {
-        //   this.items.push({
-        //     title: 'Item ' + i,
-        //     note: 'This is item #' + i,
-        //     icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-        //   });
-        // }
-      // this.getData();
     }
 
     itemTapped(event, item) {
-        console.log(event, item)
+        // console.log(this.selectedItems)
         // That's right, we're pushing to ourselves!
         this.navCtrl.push(SupplierListPage, {
           item: item
@@ -68,29 +54,12 @@ export class SupplierListPage {
                     this.suppliersArray.push({rowid:res.rows.item(i).rowid,sname:res.rows.item(i).sname,address:res.rows.item(i).address,phoneno:res.rows.item(i).phoneno})
                 }
                 console.log(this.suppliersArray, 'select console');
-              // if(res.rows.length > 0) {
-              //   this.data.rowid = res.rows.item(0).rowid;
-              //   this.data.date = res.rows.item(0).date;
-              //   this.data.type = res.rows.item(0).type;
-              //   this.data.description = res.rows.item(0).description;
-              //   this.data.amount = res.rows.item(0).amount;
-              // }
             })
             .catch(e => {
               console.log(e);
-              // this.toast.show(e, '5000', 'center').subscribe(
-              //   toast => {
-                  // console.log(toast);
-              //   }
-              // );
             });
         }).catch(e => {
           console.log(e);
-          // this.toast.show(e, '5000', 'center').subscribe(
-          //   toast => {
-              // console.log(toast);
-          //   }
-          // );
         });
     }
 
@@ -115,8 +84,9 @@ export class SupplierListPage {
                         }).then((db: SQLiteObject) => {
                             db.executeSql('DELETE FROM supplier WHERE rowid=?', [rowid])
                             .then(res => {
-                              console.log(res);
-                              this.getData();
+                                this.selectedItem = false;
+                                console.log(res);
+                                this.getData();
                             })
                         .catch(e => console.log(e));
                         }).catch(e => console.log(e));

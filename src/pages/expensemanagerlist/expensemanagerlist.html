@@ -13,28 +13,13 @@
 
 <ion-content>
     <ion-list *ngIf="!selectedItem">
-        <ion-item-sliding *ngFor="let expense of expenseArray">
-            <ion-item nopadding (click)="itemTapped($event, expense)">
-                <div class="item-note" item-start>
-                    <ion-icon ios="ios-cash" md="md-cash"></ion-icon>
-                    {{expense.date}}&nbsp;&nbsp;{{expense.type}}&nbsp;&nbsp;&#8377;{{expense.amount}}
-                </div>
-            </ion-item>
-            <ion-item-options side="right">
-                <button ion-button color="danger" (click)="deleteData(expense.rowid)">
-                  <ion-icon name="trash"></ion-icon>
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
+        <ion-item class="item_list_align" *ngFor="let expense of expenseArray" (click)="itemTapped($event, expense)">
+            <ion-icon name="leaf" item-start></ion-icon>
+            <h2>{{expense.type}}</h2>
+            <p>&#8377;{{expense.amount}}</p>
+            <ion-note item-end>{{expense.date | date}}</ion-note>
+        </ion-item>
     </ion-list>
-    <!-- <ion-list *ngIf="!selectedItem">
-        <button ion-item *ngFor="let expense of expenseArray" >
-            <div class="item-note" item-start (click)="itemTapped($event, expense)">
-                {{expense.date}}&nbsp;&nbsp;{{expense.description}}
-            </div>
-            <ion-icon ios="ios-trash" md="md-trash" item-end (click)="deleteData(expense.rowid)"></ion-icon>
-        </button>
-    </ion-list> -->
     <div *ngIf="selectedItem">
         <ion-card>
             <!-- <ion-card-header>Expense Manager Details</ion-card-header> -->
@@ -42,7 +27,7 @@
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Date</h2>
-                <p class="text_align_left">{{selectedItem.date}}</p>
+                <p class="text_align_left">{{selectedItem.date | date:'yyyy-MM-dd'}}</p>
             </ion-item>
 
             <ion-item>
@@ -68,6 +53,14 @@
                 <h2 class="text_align_left">Amount</h2>
                 <p class="text_align_left">{{selectedItem.amount}}</p>
             </ion-item>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row>
         </ion-card>
     </div>
     <!-- <ion-fab right bottom>

@@ -13,28 +13,13 @@
 
 <ion-content>
     <ion-list *ngIf="!selectedItem">
-        <ion-item-sliding *ngFor="let sales of salesArray">
-            <ion-item nopadding (click)="itemTapped($event, sales)">
-                <div class="item-note" item-start>
-                    <ion-icon ios="ios-paper" md="md-paper"></ion-icon>
-                    {{sales.name}}
-                </div>
-            </ion-item>
-            <ion-item-options side="right">
-                <button ion-button color="danger" (click)="deleteData(sales.rowid)">
-                  <ion-icon name="trash"></ion-icon>
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
+        <ion-item class="item_list_align" *ngFor="let sales of salesArray" (click)="itemTapped($event, sales)">
+            <ion-icon name="leaf" item-start></ion-icon>
+            <h2>{{sales.name}}</h2>
+            <p>{{sales.product}}</p>
+            <ion-note item-end>&#8377;{{sales.sprice}}</ion-note>
+        </ion-item>
     </ion-list>
-    <!-- <ion-list *ngIf="!selectedItem">
-        <button ion-item *ngFor="let sales of salesArray" >
-            <div class="item-note" item-start (click)="itemTapped($event, sales)">
-                {{sales.name}}&nbsp;&nbsp;{{sales.product}}&nbsp;&nbsp;{{sales.sprice}}
-            </div>
-            <ion-icon ios="ios-trash" md="md-trash" item-end (click)="deleteData(sales.rowid)"></ion-icon>
-        </button>
-    </ion-list> -->
     <div *ngIf="selectedItem">
         <ion-card>
             <!-- <ion-card-header>Sales Details</ion-card-header> -->
@@ -61,6 +46,14 @@
                 <h2 class="text_align_left">Price</h2>
                 <p class="text_align_left">{{selectedItem.sprice}}</p>
             </ion-item>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row>
         </ion-card>
     </div>
     <!-- <ion-fab right bottom>
