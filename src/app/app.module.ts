@@ -4,8 +4,8 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-// import { LoginPage } from '../pages/login/login';
-// import { RegisterPage } from '../pages/register/register';
+import { LoginPage } from '../pages/login/login';
+import { RegisterPage } from '../pages/register/register';
 import { ProductPage } from '../pages/product/product';
 import { SupplierPage } from '../pages/supplier/supplier';
 import { ExpenseManagerPage } from '../pages/expensemanager/expensemanager';
@@ -34,8 +34,8 @@ import { Toast } from '@ionic-native/toast';
   declarations: [
     MyApp,
     HomePage,
-    // LoginPage,
-    // RegisterPage,
+    LoginPage,
+    RegisterPage,
     ProductPage,
     SupplierPage,
     PaymentPage,
@@ -58,8 +58,8 @@ import { Toast } from '@ionic-native/toast';
   entryComponents: [
     MyApp,
     HomePage,
-    // LoginPage,
-    // RegisterPage,
+    LoginPage,
+    RegisterPage,
     ProductPage,
     SupplierPage,
     PaymentPage,

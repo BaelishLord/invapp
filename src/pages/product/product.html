@@ -26,7 +26,7 @@
                                 <ion-option *ngFor="let supplier of supplierArray" value="{{supplier.sname}}">{{supplier.sname}}</ion-option>
                             </ion-select>
                         </ion-item>
-                         <ion-item class="product-item" padding>
+                        <ion-item class="product-item" padding>
                             <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>
                         </ion-item>
                         <ion-item class="product-item" padding>
@@ -46,16 +46,13 @@
             <ion-row class="media_block" >
                 <ion-col>
                     <ion-list inset>
-                        <ion-item class="border_radius_10px margin_bottom_10px">
-                            <ion-buttons>
-                                <button type="button" ion-button icon-left color="secondary" (click)="presentActionSheet()">
-                                    <ion-icon name="camera"></ion-icon><span class="font_size_12px">Select Image</span>
-                                </button>
-                                <!-- <button ion-button icon-left color="secondary" (click)="uploadImage()" [disabled]="lastImage === null">
-                                    <ion-icon name="cloud-upload"></ion-icon><span class="font_size_12px">Upload</span>
-                                </button> -->
-                            </ion-buttons>
-                        </ion-item>
+                        <!-- <ion-item class="border_radius_10px margin_bottom_10px"> -->
+                        <ion-buttons>
+                            <button class="submit-btn width_100_percent" type="button" ion-button icon-left  (click)="presentActionSheet()">
+                                <ion-icon name="camera"></ion-icon><span class="font_size_12px">Select Image</span>
+                            </button>
+                        </ion-buttons>
+                        <!-- </ion-item> -->
                         <ion-item class="product-item">     
                             <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
                             <h3 [hidden]="lastImage !== null">Please Select Image!</h3>

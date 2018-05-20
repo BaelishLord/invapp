@@ -22,7 +22,6 @@
     </ion-list>
     <div *ngIf="selectedItem">
         <ion-card>
-            <!-- <ion-card-header>Sales Details</ion-card-header> -->
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Customer Name</h2>
@@ -44,7 +43,7 @@
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Price</h2>
-                <p class="text_align_left">{{selectedItem.sprice}}</p>
+                <p class="text_align_left">&#8377;{{selectedItem.sprice}}</p>
             </ion-item>
             <ion-row>
                 <ion-col>

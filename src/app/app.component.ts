@@ -4,8 +4,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 
-// import { LoginPage } from '../pages/login/login';
-// import { RegisterPage } from '../pages/register/register';
+import { LoginPage } from '../pages/login/login';
+import { RegisterPage } from '../pages/register/register';
 import { HomePage } from '../pages/home/home';
 import { ProductListPage } from '../pages/productlist/productlist';
 import { SupplierListPage } from '../pages/supplierlist/supplierlist';
@@ -20,7 +20,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
 
-    rootPage: any = HomePage;
+    rootPage: any = RegisterPage;
 
     pages: Array<{title: string, component: any}>;
     public alertPresented: any;

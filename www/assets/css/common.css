@@ -10,6 +10,12 @@
 	}
 /*---------------------height------------------------------*/
 
+/*---------------------height------------------------------*/
+	.width_100_percent {
+		width : 100%;
+	}
+/*---------------------height------------------------------*/
+
 /*---------------------padding------------------------------*/
 	.padding {
 		padding : 10px;
@@ -66,8 +72,8 @@
 	.border_radius_10px {
 		border-radius: 10px !important;
 	}
-	.list-md .item-block .item-inner {
-	     /*border-bottom: none !important; */
+	.form-horizontal .list-md .item-block .item-inner {
+	     border-bottom: none !important; 
 	}
 /*---------------------border css------------------------------*/
 

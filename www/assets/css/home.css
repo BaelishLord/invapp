@@ -21,20 +21,30 @@
 }
 
 .product_div {
-  background-color : #9e1dc7; 
+  /*background-color : #9e1dc7; */
+  background-color : #51CFB1; 
 }
 .purchase_div {
+  /*background-color : #488aff; */
   background-color : #488aff; 
 }
 .sales_div {
-  background-color : #50d679; 
+  /*background-color : #50d679; */
+  background-color : #51CFB1; 
 }
 .supplier_div {
-  background-color : #d65050; 
+  /*background-color : #d65050; */
+  background-color : #999; 
+}
+.payment_div {
+  /*background-color : #1d63c7; */
+  background-color : #999; 
 }
 .manager_div {
-  background-color : #d04cb3; 
+  /*background-color : #d04cb3; */
+  background-color : #999; 
 }
 .users_div {
+  /*background-color : #f5ab3d; */
   background-color : #f5ab3d; 
 }
