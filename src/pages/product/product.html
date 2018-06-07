@@ -34,11 +34,15 @@
                         </ion-item>
 
                         <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Per Unit Price" [(ngModel)]="product.unitprice" name="unitprice" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Paid Amount" [(ngModel)]="product.pamount" name="pamount" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
 
                         <ion-item class="product-item" padding>
-                            <ion-input type="text" placeholder="Average Price" [(ngModel)]="product.pprice" name="pprice" (keyup)='keyUp($event);'></ion-input>
+                            <ion-input type="text" placeholder="Total Price" [(ngModel)]="product.pprice" name="pprice" (keyup)='keyUp($event);' disabled></ion-input>
                         </ion-item>
                     </ion-list>
                 </ion-col>

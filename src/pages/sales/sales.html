@@ -19,13 +19,15 @@
                             <ion-input type="text" placeholder="Customer Name" [(ngModel)]="sales.name" name="name" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
                         <ion-item class="product-item" padding>
-                            <ion-select placeholder="Product" [(ngModel)]="sales.product" name="product">
+                            <ion-select placeholder="Product" [(ngModel)]="sales.product" name="product" 
+                            (ionChange)='changeUp(sales.product);'>
                                 <ion-option *ngFor="let product of productArray" value="{{product.pname}}">{{product.pname}}</ion-option>
                             </ion-select>
                         </ion-item>
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Quantity" [(ngModel)]="sales.squantity" name="squantity" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
+                        <div class="error-box color_red" *ngIf="sales.quantitycheck">* Quantity greater than available product quantity.</div>
 
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Price" [(ngModel)]="sales.sprice" name="sprice" (keyup)='keyUp($event);'></ion-input>

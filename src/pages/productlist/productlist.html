@@ -25,7 +25,7 @@
     <div *ngIf="selectedItem">
         <ion-card>
             <!-- <ion-card-header>Product Details</ion-card-header> -->
-            <img src="{{selectedItem.file}}" />
+            <img style="height:300px !important" src="{{selectedItem.file}}" />
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Product Name</h2>
@@ -46,14 +46,20 @@
 
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Product Supplier</h2>
+                <p class="text_align_left">{{selectedItem.psupplier}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Product Quantity</h2>
                 <p class="text_align_left">{{selectedItem.pquantity}}</p>
             </ion-item>
 
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
-                <h2 class="text_align_left">Product Supplier</h2>
-                <p class="text_align_left">{{selectedItem.psupplier}}</p>
+                <h2 class="text_align_left">Per Unit Price</h2>
+                <p class="text_align_left">&#8377;{{selectedItem.unitprice}}</p>
             </ion-item>
 
             <ion-item>
@@ -61,6 +67,7 @@
                 <h2 class="text_align_left">Product Price</h2>
                 <p class="text_align_left">&#8377;{{selectedItem.pprice}}</p>
             </ion-item>
+            
             <ion-row>
                 <ion-col>
                     <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">

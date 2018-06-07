@@ -46,7 +46,7 @@ export class SupplierListPage {
           name: 'ionicdb.db',
           location: 'default'
         }).then((db: SQLiteObject) => {
-          db.executeSql('SELECT * FROM supplier',{})
+          db.executeSql('SELECT * FROM supplier ORDER BY rowid DESC',{})
             .then(res => {
                 console.log(res, 'select console');
                 this.suppliersArray = [];

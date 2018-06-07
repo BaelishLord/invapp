@@ -22,18 +22,26 @@ export class ProductPage {
   	loading: Loading;
   	setHideShow: boolean = false;
 
-  	product = {pname: "", pid: "", psupplier: "", pdate:"", pquantity: "", pamount: "", pprice: "", myForm: true};
+  	product = {pname: "", pid: "", psupplier: "", pdate:"", pquantity: "", pamount: "", pprice: "",unitprice : "", myForm: true};
   	supplierArray: any = [];
   	constructor(public navCtrl: NavController, private camera: Camera, private transfer: Transfer, private file: File, private filePath: FilePath, public actionSheetCtrl: ActionSheetController, public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController, private sqlite: SQLite, private toast: Toast) {
   		this.product.myForm = true;
   	}
 
   	keyUp(event) {
-        if (this.product.pname != "" && this.product.pid != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "") {
+  		if (this.product.pquantity != "" && this.product.unitprice != "") {
+  			var total = (parseInt(this.product.pquantity) * parseInt(this.product.unitprice));
+  			this.product.pprice = String(total);
+  		} else {
+  			this.product.pprice = "";
+  		}
+
+        if (this.product.pname != "" && this.product.pid != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "" && this.product.unitprice != "") {
             this.product.myForm = false;
         } else {
             this.product.myForm = true;
         }
+        
     }
 
   	
@@ -230,10 +238,10 @@ export class ProductPage {
         }).then((db: SQLiteObject) => {
             // db.executeSql('DROP TABLE IF EXISTS product', {})
             db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {})
-            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, psupplier TEXT, pdate TEXT, pquantity INTEGER, pamount INTEGER, pprice INTEGER, file TEXT)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, psupplier TEXT, pdate TEXT, pquantity INTEGER, pamount INTEGER, pprice INTEGER, unitprice INTEGER, file TEXT)', {})
             .then(res => {
-                db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.product.pdate,this.product.pquantity,'expense',this.product.pname,this.product.pamount])
-                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?,?,?,?,?)',[this.product.pname,this.product.pid,this.product.psupplier,this.product.pdate,this.product.pquantity,this.product.pamount,this.product.pprice,this.pathForImage(this.lastImage)])
+                db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.product.pdate,this.product.pquantity,'expense',this.product.pname,this.product.pprice])
+                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?,?,?,?,?,?)',[this.product.pname,this.product.pid,this.product.psupplier,this.product.pdate,this.product.pquantity,this.product.pamount,this.product.pprice,this.product.unitprice,this.pathForImage(this.lastImage)])
                 .then(res => {
                     console.log(res);
                     this.navCtrl.setRoot(ProductListPage);

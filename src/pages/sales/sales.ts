@@ -23,20 +23,78 @@ export class SalesPage {
     information = [];
     productItem = [];
 
-    sales = {name: "", product: "", squantity:"", sprice:"", myForm: true, todaydate: new Date()};
+    sales = {name: "", product: "", squantity:"", sprice:"", myForm: true, todaydate: new Date(), quantitycheck:false, totalValueQuantity : 0};
     productArray: any = [];
     // let date = new Date();
     constructor(public navCtrl: NavController, public navParams: NavParams, private fb: FormBuilder, private sqlite: SQLite, private toast: Toast) {
         this.sales.myForm = true;
+        this.sales.quantitycheck = false;
         // this.sales.todaydate = new Date();
         // this.myForm = fb.group({
         //     name: ['', Validators.required]
         // });
-  	}
+    }
+
+    changeUp(value) {
+        console.log("valuevalue",value)
+        var productQuantity = 0;
+        var salesQuantity = 0;
+        var finalCalc = 0;
+        
+        this.sqlite.create({
+          name: 'ionicdb.db',
+          location: 'default'
+        }).then((db: SQLiteObject) => {
+          db.executeSql('select pquantity from product where pname = ?',[value])
+            .then(res => {
+                if (res.rows.item(0).pquantity == 0 || res.rows.item(0).pquantity == null) {
+                    productQuantity = 0
+                } else {
+                    productQuantity = parseInt(res.rows.item(0).pquantity)
+                }
+                console.log(res,productQuantity, 'select console');
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        }).catch(e => {
+          console.log(e);
+        });
+
+        this.sqlite.create({
+          name: 'ionicdb.db',
+          location: 'default'
+        }).then((db: SQLiteObject) => {
+          db.executeSql('select SUM(squantity) AS totalquantity from sales where product = ?',[value])
+            .then(res => {
+                if (res.rows.item(0).totalquantity == 0 || res.rows.item(0).totalquantity == null) {
+                    salesQuantity = 0;
+                } else {
+                    salesQuantity = parseInt(res.rows.item(0).totalquantity)
+                }
+                console.log(res,salesQuantity, 'select console');
+                finalCalc = productQuantity - salesQuantity;
+                this.sales.squantity = String(finalCalc);
+                this.sales.totalValueQuantity = finalCalc;
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        }).catch(e => {
+          console.log(e);
+        });
+
+    }
 
     keyUp(event) {
         if (this.sales.name != "" && this.sales.squantity != "" && this.sales.sprice != "" && this.sales.product != "") {
-            this.sales.myForm = false;
+            if (parseInt(this.sales.squantity) > this.sales.totalValueQuantity) {
+                this.sales.myForm = true;
+                this.sales.quantitycheck = true;
+            } else {
+                this.sales.myForm = false;
+                this.sales.quantitycheck = false;
+            }
         } else {
             this.sales.myForm = true;
         }

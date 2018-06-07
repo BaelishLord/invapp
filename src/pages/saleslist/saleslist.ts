@@ -44,7 +44,7 @@ export class SalesListPage {
           name: 'ionicdb.db',
           location: 'default'
         }).then((db: SQLiteObject) => {
-          db.executeSql('SELECT * FROM sales',{})
+          db.executeSql('SELECT * FROM sales ORDER BY rowid DESC',{})
             .then(res => {
                 console.log(res, 'select console');
                 this.salesArray = [];

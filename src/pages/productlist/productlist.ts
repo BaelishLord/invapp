@@ -53,12 +53,12 @@ export class ProductListPage {
           name: 'ionicdb.db',
           location: 'default'
         }).then((db: SQLiteObject) => {
-          db.executeSql('SELECT * FROM product',{})
+          db.executeSql('SELECT * FROM product ORDER BY rowid DESC',{})
             .then(res => {
                 console.log(res, 'select console');
                 this.productArray = [];
                 for(var i=0; i<res.rows.length; i++) {
-                    this.productArray.push({rowid:res.rows.item(i).rowid,pname:res.rows.item(i).pname,pid:res.rows.item(i).pid,pdate:res.rows.item(i).pdate,pquantity:res.rows.item(i).pquantity,psupplier:res.rows.item(i).psupplier,pprice:res.rows.item(i).pprice,file:res.rows.item(i).file})
+                    this.productArray.push({rowid:res.rows.item(i).rowid,pname:res.rows.item(i).pname,pid:res.rows.item(i).pid,pdate:res.rows.item(i).pdate,pquantity:res.rows.item(i).pquantity,psupplier:res.rows.item(i).psupplier,pprice:res.rows.item(i).pprice,unitprice:res.rows.item(i).unitprice,file:res.rows.item(i).file})
                 }
                 console.log(this.productArray, 'select console');
             })
@@ -132,82 +132,4 @@ export class ProductListPage {
         this.navCtrl.setRoot(ProductPage);
     }
 }
-
-// @Component({
-//     template: 
-//     `<ion-header>
-//           <ion-toolbar>
-//             <ion-title>
-//                 Description
-//             </ion-title>
-//             <ion-buttons start>
-//               <button ion-button (click)="dismiss()">
-//                 <span ion-text color="primary" showWhen="ios">Cancel</span>
-//                 <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
-//               </button>
-//             </ion-buttons>
-//           </ion-toolbar>
-//         </ion-header>
-//         <ion-content>
-//           <ion-list>
-//               <ion-item>
-//                 <ion-avatar item-start>
-//                   <img src="{{character.image}}">
-//                 </ion-avatar>
-//                 <h2>{{character.name}}</h2>
-//                 <p>{{character.quote}}</p>
-//               </ion-item>
-//               <ion-item *ngFor="let item of character['items']">
-//                 {{item.title}}
-//                 <ion-note item-end>
-//                   {{item.note}}
-//                 </ion-note>
-//               </ion-item>
-//           </ion-list>
-//     </ion-content>`
-// })
-
-// export class ModalContentPage {
-//     character;
-
-//     constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController) {
-//         var characters = [
-//             {
-//                 name: 'Gollum',
-//                 quote: 'Sneaky little hobbitses!',
-//                 image: 'assets/img/avatar-gollum.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'River Folk' },
-//                     { title: 'Alter Ego', note: 'Smeagol' }
-//                 ]
-//             },
-//             {
-//                 name: 'Frodo',
-//                 quote: 'Go back, Sam! I\'m going to Mordor alone!',
-//                 image: 'assets/img/avatar-frodo.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'Shire Folk' },
-//                     { title: 'Weapon', note: 'Sting' }
-//                 ]
-//             },
-//             {
-//                 name: 'Samwise Gamgee',
-//                 quote: 'What we need is a few good taters.',
-//                 image: 'assets/img/avatar-samwise.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'Shire Folk' },
-//                     { title: 'Nickname', note: 'Sam' }
-//                 ]
-//             }
-//         ];
-//         this.character = characters[this.params.get('charNum')];
-//     }
-
-//     dismiss() {
-//         this.viewCtrl.dismiss();
-//     }
-// }
 

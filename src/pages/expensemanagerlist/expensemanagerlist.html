@@ -15,7 +15,8 @@
     <ion-list *ngIf="!selectedItem">
         <ion-item class="item_list_align" *ngFor="let expense of expenseArray" (click)="itemTapped($event, expense)">
             <ion-icon name="leaf" item-start></ion-icon>
-            <h2>{{expense.type}}</h2>
+            <h2 *ngIf="expense.type == 'expense'">Expense</h2>
+            <h2 *ngIf="expense.type == 'income'">Income</h2>
             <p>&#8377;{{expense.amount}}</p>
             <ion-note item-end>{{expense.date | date}}</ion-note>
         </ion-item>

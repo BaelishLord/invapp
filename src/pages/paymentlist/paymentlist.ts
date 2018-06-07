@@ -44,7 +44,7 @@ export class PaymentListPage {
           name: 'ionicdb.db',
           location: 'default'
         }).then((db: SQLiteObject) => {
-          db.executeSql('SELECT * FROM payment',{})
+          db.executeSql('SELECT * FROM payment ORDER BY rowid DESC',{})
             .then(res => {
                 console.log(res, 'select console');
                 this.paymentArray = [];
