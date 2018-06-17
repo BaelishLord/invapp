@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+         <ion-title>
+            Add customer
+            <ion-icon title="customer List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)='clickLink();'></ion-icon>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content class="product-content" padding>
+    <div class="login-box">
+        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>
+            <ion-row>
+                <ion-col>
+                    <ion-list inset>
+                        <!-- <div class="" *ngIf="!customerForm.controls.customer_name.valid  && (customerForm.controls.customer_name.dirty || submitAttempt)">* Please enter valid customer name.</div> -->
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="customer Name" [(ngModel)]="customer.cname" name="cname" (keyup)='keyUp($event);'>
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="customer.address" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="email" placeholder="Email" name="email" [(ngModel)]="customer.email" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="customer.phoneno" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Remark" maxlength="50" name="remark" [(ngModel)]="customer.remark" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col class="signup-col">
+                    <button ion-button class="submit-btn" full type="submit" [disabled]="customer.myForm">Add Customer</button>
+                </ion-col>
+            </ion-row>
+        </form>
+    </div>
+</ion-content>

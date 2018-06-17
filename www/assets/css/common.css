@@ -91,3 +91,15 @@
 		text-align: left !important;
 	}
 /*---------------------text align css------------------------------*/
+
+table.reporttable {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width:100%;
+}
+
+.reporttable td, th {
+	border : 1px solid #ddd;
+	text-align: left;
+	padding: 8px;
+}

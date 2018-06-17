@@ -8,17 +8,22 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { ProductPage } from '../pages/product/product';
 import { SupplierPage } from '../pages/supplier/supplier';
+import { CustomerPage } from '../pages/customer/customer';
 import { ExpenseManagerPage } from '../pages/expensemanager/expensemanager';
-// import { PurchasePage } from '../pages/purchase/purchase';
 import { SalesPage } from '../pages/sales/sales';
 import { PaymentPage } from '../pages/payment/payment';
 import { ProductListPage } from '../pages/productlist/productlist';
 import { SupplierListPage } from '../pages/supplierlist/supplierlist';
-// import { PurchaseListPage } from '../pages/purchaselist/purchaselist';
+import { CustomerListPage } from '../pages/customerlist/customerlist';
 import { SalesListPage } from '../pages/saleslist/saleslist';
 import { ExpenseManagerListPage } from '../pages/expensemanagerlist/expensemanagerlist';
 import { PaymentListPage } from '../pages/paymentlist/paymentlist';
-// import { ModalContentPage } from '../pages/productlist/productlist';
+
+import { StockReportPage } from '../pages/stockreport/stockreport';
+import { SalesReportPage } from '../pages/salesreport/salesreport';
+import { PurchaseReportPage } from '../pages/purchasereport/purchasereport';
+import { PaymentReportPage } from '../pages/paymentreport/paymentreport';
+import { PaymentDuePage } from '../pages/paymentdue/paymentdue';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -38,17 +43,21 @@ import { Toast } from '@ionic-native/toast';
     RegisterPage,
     ProductPage,
     SupplierPage,
+    CustomerPage,
     PaymentPage,
     ExpenseManagerPage,
-    // PurchasePage,
     SalesPage,
     ProductListPage,
     SupplierListPage,
-    // PurchaseListPage,
+    CustomerListPage,
     SalesListPage,
     PaymentListPage,
-    ExpenseManagerListPage
-    // ModalContentPage
+    ExpenseManagerListPage,
+    StockReportPage,
+    SalesReportPage,
+    PurchaseReportPage,
+    PaymentReportPage,
+    PaymentDuePage
   ],
   imports: [
     BrowserModule,
@@ -62,17 +71,21 @@ import { Toast } from '@ionic-native/toast';
     RegisterPage,
     ProductPage,
     SupplierPage,
+    CustomerPage,
     PaymentPage,
     ExpenseManagerPage,
-    // PurchasePage,
     SalesPage,
     ProductListPage,
     SupplierListPage,
-    // PurchaseListPage,
+    CustomerListPage,
     SalesListPage,
     PaymentListPage,
-    ExpenseManagerListPage
-    // ModalContentPage
+    ExpenseManagerListPage,
+    StockReportPage,
+    SalesReportPage,
+    PurchaseReportPage,
+    PaymentReportPage,
+    PaymentDuePage
   ],
   providers: [
     StatusBar,

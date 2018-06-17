@@ -6,13 +6,13 @@ webpackJsonp([0],{
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProductPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__ = __webpack_require__(207);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_camera__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__ = __webpack_require__(207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_camera__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_toast__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__productlist_productlist__ = __webpack_require__(104);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -46,12 +46,14 @@ var ProductPage = (function () {
         this.sqlite = sqlite;
         this.toast = toast;
         this.lastImage = null;
+        this.cursor = null;
         this.setHideShow = false;
-        this.product = { pname: "", pid: "", psupplier: "", pdate: "", pquantity: "", pamount: "", pprice: "", unitprice: "", myForm: true };
+        this.product = { pname: "", pid: "", pdescription: "", psupplier: "", pdate: "", pquantity: "", pamount: "", pprice: "", unitprice: "", myForm: true, productIdError: false };
         this.supplierArray = [];
         this.product.myForm = true;
     }
     ProductPage.prototype.keyUp = function (event) {
+        var _this = this;
         if (this.product.pquantity != "" && this.product.unitprice != "") {
             var total = (parseInt(this.product.pquantity) * parseInt(this.product.unitprice));
             this.product.pprice = String(total);
@@ -59,11 +61,30 @@ var ProductPage = (function () {
         else {
             this.product.pprice = "";
         }
-        if (this.product.pname != "" && this.product.pid != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "" && this.product.unitprice != "") {
+        if (this.product.pname != "" && this.product.pid != "" && this.product.pdescription != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "" && this.product.unitprice != "") {
             this.product.myForm = false;
         }
         else {
             this.product.myForm = true;
+        }
+        if (this.product.pid != "") {
+            this.sqlite.create({
+                name: 'ionicdb.db',
+                location: 'default'
+            }).then(function (db) {
+                cursor = db.executeSql('SELECT count(*) from product where pid = ?', [_this.product.pid])
+                    .then(function (res) {
+                    // console.log(res.rows.item(0));
+                    // if (cur.getInt(0) == 0) {
+                    // 	this.product.myForm = false;
+                    // 	this.product.productIdError = false;
+                    // } else {
+                    // 	this.product.myForm = true;
+                    // 	this.product.productIdError = true;
+                    // }
+                })
+                    .catch(function (e) { return console.log(e); });
+            }).catch(function (e) { return console.log(e); });
         }
     };
     ProductPage.prototype.presentActionSheet = function () {
@@ -110,34 +131,7 @@ var ProductPage = (function () {
         };
         console.log(options);
         console.log(targetPath);
-        // const fileTransfer: TransferObject = this.transfer.create();
-        // console.log(this.transfer.create())
-        // Simulate a call to Dropbox or other service that can
-        // return an image as an ArrayBuffer.
-        // var base64 = this.getBase64Image(targetPath);
-        // console.log(base64)
-        // this.loading = this.loadingCtrl.create({
-        //   content: 'Uploading...',
-        // });
-        // this.loading.present();
-        // // Use the FileTransfer to upload the image
-        // fileTransfer.upload(targetPath, url, options).then(data => {
-        //   this.loading.dismissAll()
-        //   this.presentToast('Image succesful uploaded.');
-        // }, err => {
-        //   this.loading.dismissAll()
-        //   this.presentToast('Error while uploading file.');
-        // });
     };
-    // public getBase64Image(img) {
-    // 	var canvas = document.createElement("canvas");
-    // 	canvas.width = img.width;
-    // 	canvas.height = img.height;
-    // 	var ctx = canvas.getContext("2d");
-    // 	ctx.drawImage(img, 0, 0);
-    // 	var dataURL = canvas.toDataURL("image/png");
-    // 	return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-    // }
     ProductPage.prototype.createFileName = function () {
         var d = new Date(), n = d.getTime(), newFileName = n + ".jpg";
         return newFileName;
@@ -242,12 +236,15 @@ var ProductPage = (function () {
             name: 'ionicdb.db',
             location: 'default'
         }).then(function (db) {
-            // db.executeSql('DROP TABLE IF EXISTS product', {})
-            db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {});
-            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, psupplier TEXT, pdate TEXT, pquantity INTEGER, pamount INTEGER, pprice INTEGER, unitprice INTEGER, file TEXT)', {})
+            // db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, pdescription TEXT, file TEXT)', {});
+            db.executeSql('CREATE TABLE IF NOT EXISTS purchase(rowid INTEGER PRIMARY KEY, productId INTEGER NOT NULL, psupplier TEXT, pquantity INTEGER, pprice INTEGER, unitprice INTEGER)', {});
+            db.executeSql('CREATE TABLE IF NOT EXISTS purchasepayment(rowid INTEGER PRIMARY KEY, productId INTEGER NOT NULL, pdate TEXT, pamount INTEGER)', {})
                 .then(function (res) {
-                db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)', [_this.product.pdate, _this.product.pquantity, 'expense', _this.product.pname, _this.product.pprice]);
-                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?,?,?,?,?,?)', [_this.product.pname, _this.product.pid, _this.product.psupplier, _this.product.pdate, _this.product.pquantity, _this.product.pamount, _this.product.pprice, _this.product.unitprice, _this.pathForImage(_this.lastImage)])
+                // db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.product.pdate,this.product.pquantity,'expense',this.product.pname,this.product.pprice])
+                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?)', [_this.product.pname, _this.product.pid, _this.product.pdescription, _this.pathForImage(_this.lastImage)]);
+                db.executeSql('INSERT INTO purchase VALUES(NULL,?,?,?,?,?)', [_this.product.pid, _this.product.psupplier, _this.product.pquantity, _this.product.pprice, _this.product.unitprice]);
+                db.executeSql('INSERT INTO purchasepayment VALUES(NULL,?,?,?)', [_this.product.pid, _this.product.pdate, _this.product.pamount])
                     .then(function (res) {
                     console.log(res);
                     _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_8__productlist_productlist__["a" /* ProductListPage */]);
@@ -264,11 +261,12 @@ var ProductPage = (function () {
 }());
 ProductPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\product\product.html"*/'<ion-header>\n\n    <ion-navbar>\n\n        <button ion-button menuToggle>\n\n            <ion-icon name="menu"></ion-icon>\n\n        </button>\n\n        <ion-title>\n\n            Add Product\n\n            <ion-icon title="Product List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)=\'clickLink();\'></ion-icon>\n\n        </ion-title>\n\n    </ion-navbar>\n\n</ion-header>\n\n<ion-content class="product-content" padding>\n\n    <div class="login-box">\n\n        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>\n\n            <ion-row class="content_block">\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Product Name" [(ngModel)]="product.pname" name="pname" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Product ID" [(ngModel)]="product.pid" name="pid" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-select placeholder="Product Supplier" [(ngModel)]="product.psupplier" name="psupplier">\n\n                                <ion-option *ngFor="let supplier of supplierArray" value="{{supplier.sname}}">{{supplier.sname}}</ion-option>\n\n                            </ion-select>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Quantity" [(ngModel)]="product.pquantity" name="pquantity" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Per Unit Price" [(ngModel)]="product.unitprice" name="unitprice" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Paid Amount" [(ngModel)]="product.pamount" name="pamount" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Total Price" [(ngModel)]="product.pprice" name="pprice" (keyup)=\'keyUp($event);\' disabled></ion-input>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row class="media_block" >\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <!-- <ion-item class="border_radius_10px margin_bottom_10px"> -->\n\n                        <ion-buttons>\n\n                            <button class="submit-btn width_100_percent" type="button" ion-button icon-left  (click)="presentActionSheet()">\n\n                                <ion-icon name="camera"></ion-icon><span class="font_size_12px">Select Image</span>\n\n                            </button>\n\n                        </ion-buttons>\n\n                        <!-- </ion-item> -->\n\n                        <ion-item class="product-item">     \n\n                            <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">\n\n                            <h3 [hidden]="lastImage !== null">Please Select Image!</h3>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n                <ion-col class="signup-col">\n\n                    <button ion-button class="submit-btn add_product" full type="submit" [disabled]="product.myForm">Add Product</button>\n\n                    <!-- <button ion-button class="submit-btn continue" full type="button" *ngIf="setHideShow == false" (click)="hideShowDiv()">Continue</button> -->\n\n                </ion-col>\n\n            </ion-row>\n\n        </form>\n\n    </div>\n\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\product\product.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\product\product.html"*/'<ion-header>\n\n    <ion-navbar>\n\n        <button ion-button menuToggle>\n\n            <ion-icon name="menu"></ion-icon>\n\n        </button>\n\n        <ion-title>\n\n            Add Product\n\n            <ion-icon title="Product List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)=\'clickLink();\'></ion-icon>\n\n        </ion-title>\n\n    </ion-navbar>\n\n</ion-header>\n\n<ion-content class="product-content" padding>\n\n    <div class="login-box">\n\n        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>\n\n            <ion-row class="content_block">\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <div class="productHeader">\n\n                            Product Details\n\n                        </div>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Product Name" [(ngModel)]="product.pname" name="pname" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Product Code" [(ngModel)]="product.pid" name="pid" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <div class="error-box color_red" *ngIf="product.productIdError">Please check Product Id.</div>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Product Description" [(ngModel)]="product.pdescription" name="pid" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n\n\n                        <div class="productHeader">\n\n                            Purchase Details\n\n                        </div>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-select placeholder="Product Supplier" [(ngModel)]="product.psupplier" name="psupplier">\n\n                                <ion-option *ngFor="let supplier of supplierArray" value="{{supplier.sname}}">{{supplier.sname}}</ion-option>\n\n                            </ion-select>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Quantity" [(ngModel)]="product.pquantity" name="pquantity" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Per Unit Price" [(ngModel)]="product.unitprice" name="unitprice" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Total Price" [(ngModel)]="product.pprice" name="pprice" (keyup)=\'keyUp($event);\' disabled></ion-input>\n\n                        </ion-item>\n\n\n\n                        <div class="productHeader">\n\n                            Payment Details\n\n                        </div>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-datetime placeholder="Payment Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Payment Amount" [(ngModel)]="product.pamount" name="pamount" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row class="media_block" >\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <!-- <ion-item class="border_radius_10px margin_bottom_10px"> -->\n\n                        <ion-buttons>\n\n                            <button class="submit-btn width_100_percent" type="button" ion-button icon-left  (click)="presentActionSheet()">\n\n                                <ion-icon name="camera"></ion-icon><span class="font_size_12px">Select Image</span>\n\n                            </button>\n\n                        </ion-buttons>\n\n                        <!-- </ion-item> -->\n\n                        <ion-item class="product-item">     \n\n                            <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">\n\n                            <h3 class="text-center" [hidden]="lastImage !== null">Please Select Image!</h3>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n                <ion-col class="signup-col">\n\n                    <button ion-button class="submit-btn add_product" full type="submit" [disabled]="product.myForm">Add Product</button>\n\n                    <!-- <button ion-button class="submit-btn continue" full type="button" *ngIf="setHideShow == false" (click)="hideShowDiv()">Continue</button> -->\n\n                </ion-col>\n\n            </ion-row>\n\n        </form>\n\n    </div>\n\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\product\product.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_6__ionic_native_camera__["a" /* Camera */], __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__["a" /* File */], __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__["a" /* FilePath */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* ToastController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* LoadingController */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_7__ionic_native_toast__["a" /* Toast */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_6__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__ionic_native_camera__["a" /* Camera */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_transfer__["a" /* Transfer */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__["a" /* File */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__ionic_native_file__["a" /* File */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__["a" /* FilePath */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__ionic_native_file_path__["a" /* FilePath */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* ActionSheetController */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* ToastController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* ToastController */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* LoadingController */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_7__ionic_native_toast__["a" /* Toast */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__ionic_native_toast__["a" /* Toast */]) === "function" && _l || Object])
 ], ProductPage);
 
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
 //# sourceMappingURL=product.js.map
 
 /***/ }),
@@ -279,8 +277,8 @@ ProductPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProductListPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__product_product__ = __webpack_require__(103);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -335,30 +333,20 @@ var ProductListPage = ProductListPage_1 = (function () {
             name: 'ionicdb.db',
             location: 'default'
         }).then(function (db) {
-            db.executeSql('SELECT * FROM product ORDER BY rowid DESC', {})
+            db.executeSql('SELECT p.*, ph.*, pp.* from product p left join purchase ph on p.pid = ph.productId left join purchasepayment pp on p.pid = pp.productId', {})
                 .then(function (res) {
                 console.log(res, 'select console');
                 _this.productArray = [];
                 for (var i = 0; i < res.rows.length; i++) {
-                    _this.productArray.push({ rowid: res.rows.item(i).rowid, pname: res.rows.item(i).pname, pid: res.rows.item(i).pid, pdate: res.rows.item(i).pdate, pquantity: res.rows.item(i).pquantity, psupplier: res.rows.item(i).psupplier, pprice: res.rows.item(i).pprice, unitprice: res.rows.item(i).unitprice, file: res.rows.item(i).file });
+                    _this.productArray.push({ rowid: res.rows.item(i).rowid, pname: res.rows.item(i).pname, pid: res.rows.item(i).pid, pdescription: res.rows.item(i).pdescription, pdate: res.rows.item(i).pdate, pquantity: res.rows.item(i).pquantity, psupplier: res.rows.item(i).psupplier, pprice: res.rows.item(i).pprice, unitprice: res.rows.item(i).unitprice, file: res.rows.item(i).file });
                 }
                 console.log(_this.productArray, 'select console');
             })
                 .catch(function (e) {
                 console.log(e);
-                // this.toast.show(e, '5000', 'center').subscribe(
-                //   toast => {
-                // console.log(toast);
-                //   }
-                // );
             });
         }).catch(function (e) {
             console.log(e);
-            // this.toast.show(e, '5000', 'center').subscribe(
-            //   toast => {
-            // console.log(toast);
-            //   }
-            // );
         });
     };
     ProductListPage.prototype.deleteData = function (rowid) {
@@ -415,7 +403,7 @@ var ProductListPage = ProductListPage_1 = (function () {
 }());
 ProductListPage = ProductListPage_1 = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\productlist\productlist.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Product List\n      <ion-icon title="Add Product" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon>\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list *ngIf="!selectedItem">\n        <ion-item class="item_list_align" *ngFor="let product of productArray" (click)="itemTapped($event, product)">\n            <ion-avatar item-start>\n                <img src="{{product.file}}">\n            </ion-avatar>\n            <h2>{{product.pname}}</h2>\n            <p>&#8377;{{product.pprice}}</p>\n            <ion-note item-end>{{product.pdate | date}}</ion-note>\n        </ion-item>\n    </ion-list>\n    <div *ngIf="selectedItem">\n        <ion-card>\n            <!-- <ion-card-header>Product Details</ion-card-header> -->\n            <img style="height:300px !important" src="{{selectedItem.file}}" />\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Name</h2>\n                <p class="text_align_left">{{selectedItem.pname}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Id</h2>\n                <p class="text_align_left">{{selectedItem.pid}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Date</h2>\n                <p class="text_align_left">{{selectedItem.pdate}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Supplier</h2>\n                <p class="text_align_left">{{selectedItem.psupplier}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Quantity</h2>\n                <p class="text_align_left">{{selectedItem.pquantity}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Per Unit Price</h2>\n                <p class="text_align_left">&#8377;{{selectedItem.unitprice}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Price</h2>\n                <p class="text_align_left">&#8377;{{selectedItem.pprice}}</p>\n            </ion-item>\n            \n            <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row>\n        </ion-card>\n    </div>\n    <!-- <ion-fab right bottom>\n        <button ion-fab color="light">\n           <ion-icon name="search"></ion-icon>\n        </button>\n    </ion-fab> -->\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\productlist\productlist.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\productlist\productlist.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Product List\n      <ion-icon title="Add Product" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon>\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list *ngIf="!selectedItem">\n        <ion-item class="item_list_align" *ngFor="let product of productArray" (click)="itemTapped($event, product)">\n            <ion-avatar item-start>\n                <img src="{{product.file}}">\n            </ion-avatar>\n            <h2>{{product.pname}}</h2>\n            <p>&#8377;{{product.pprice}}</p>\n            <ion-note item-end>{{product.pdate | date}}</ion-note>\n        </ion-item>\n    </ion-list>\n    <div *ngIf="selectedItem">\n        <ion-card>\n            <!-- <ion-card-header>Product Details</ion-card-header> -->\n            <img style="height:300px !important" src="{{selectedItem.file}}" />\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Name</h2>\n                <p class="text_align_left">{{selectedItem.pname}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Id</h2>\n                <p class="text_align_left">{{selectedItem.pid}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Description</h2>\n                <p class="text_align_left">{{selectedItem.pdescription}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Date</h2>\n                <p class="text_align_left">{{selectedItem.pdate}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Supplier</h2>\n                <p class="text_align_left">{{selectedItem.psupplier}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Quantity</h2>\n                <p class="text_align_left">{{selectedItem.pquantity}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Per Unit Price</h2>\n                <p class="text_align_left">&#8377;{{selectedItem.unitprice}}</p>\n            </ion-item>\n\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Product Price</h2>\n                <p class="text_align_left">&#8377;{{selectedItem.pprice}}</p>\n            </ion-item>\n            \n            <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row>\n            <!-- <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row> -->\n        </ion-card>\n    </div>\n    <!-- <ion-fab right bottom>\n        <button ion-fab color="light">\n           <ion-icon name="search"></ion-icon>\n        </button>\n    </ion-fab> -->\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\productlist\productlist.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
 ], ProductListPage);
@@ -432,9 +420,9 @@ var ProductListPage_1;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SupplierPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__supplierlist_supplierlist__ = __webpack_require__(106);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -465,12 +453,12 @@ var SupplierPage = (function () {
         this.toast = toast;
         this.information = [];
         // data = { date:"", type:"", description:"", amount:"" };
-        this.supplier = { sname: "", address: "", phoneno: "", myForm: true };
+        this.supplier = { sname: "", address: "", email: "", phoneno: "", remark: "", myForm: true };
         this.supplier.myForm = true;
     }
     SupplierPage.prototype.keyUp = function (event) {
         console.log(this.supplier.sname, this.supplier.address, this.supplier.phoneno);
-        if (this.supplier.sname != "" && this.supplier.address != "" && this.supplier.phoneno != "") {
+        if (this.supplier.sname != "" && this.supplier.address != "" && this.supplier.email != "" && this.supplier.phoneno != "" && this.supplier.remark != "") {
             this.supplier.myForm = false;
         }
         else {
@@ -483,9 +471,9 @@ var SupplierPage = (function () {
             name: 'ionicdb.db',
             location: 'default'
         }).then(function (db) {
-            db.executeSql('CREATE TABLE IF NOT EXISTS supplier(rowid INTEGER PRIMARY KEY, sname TEXT, address TEXT, phoneno TEXT)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS supplier(rowid INTEGER PRIMARY KEY, sname TEXT, address TEXT, email TEXT, phoneno TEXT, remark TEXT)', {})
                 .then(function (res) {
-                db.executeSql('INSERT INTO supplier VALUES(NULL,?,?,?)', [_this.supplier.sname, _this.supplier.address, _this.supplier.phoneno])
+                db.executeSql('INSERT INTO supplier VALUES(NULL,?,?,?,?,?)', [_this.supplier.sname, _this.supplier.address, _this.supplier.email, _this.supplier.phoneno, _this.supplier.remark])
                     .then(function (res) {
                     console.log(res);
                     _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_5__supplierlist_supplierlist__["a" /* SupplierListPage */]);
@@ -506,7 +494,7 @@ var SupplierPage = (function () {
 }());
 SupplierPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-list',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\supplier\supplier.html"*/'<ion-header>\n\n    <ion-navbar>\n\n        <button ion-button menuToggle>\n\n          <ion-icon name="menu"></ion-icon>\n\n        </button>\n\n         <ion-title>\n\n            Add Supplier\n\n            <ion-icon title="Supplier List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)=\'clickLink();\'></ion-icon>\n\n        </ion-title>\n\n    </ion-navbar>\n\n</ion-header>\n\n<ion-content class="product-content" padding>\n\n    <div class="login-box">\n\n        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>\n\n            <ion-row>\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <!-- <div class="" *ngIf="!supplierForm.controls.supplier_name.valid  && (supplierForm.controls.supplier_name.dirty || submitAttempt)">* Please enter valid supplier name.</div> -->\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Supplier Name" [(ngModel)]="supplier.sname" name="sname" (keyup)=\'keyUp($event);\'>\n\n                            </ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="supplier.address" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="supplier.phoneno" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n                <ion-col class="signup-col">\n\n                    <button ion-button class="submit-btn" full type="submit" [disabled]="supplier.myForm">Add Supplier</button>\n\n                </ion-col>\n\n            </ion-row>\n\n        </form>\n\n    </div>\n\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\supplier\supplier.html"*/
+        selector: 'page-list',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\supplier\supplier.html"*/'<ion-header>\n\n    <ion-navbar>\n\n        <button ion-button menuToggle>\n\n          <ion-icon name="menu"></ion-icon>\n\n        </button>\n\n         <ion-title>\n\n            Add Supplier\n\n            <ion-icon title="Supplier List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)=\'clickLink();\'></ion-icon>\n\n        </ion-title>\n\n    </ion-navbar>\n\n</ion-header>\n\n<ion-content class="product-content" padding>\n\n    <div class="login-box">\n\n        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>\n\n            <ion-row>\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <!-- <div class="" *ngIf="!supplierForm.controls.supplier_name.valid  && (supplierForm.controls.supplier_name.dirty || submitAttempt)">* Please enter valid supplier name.</div> -->\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Supplier Name" [(ngModel)]="supplier.sname" name="sname" (keyup)=\'keyUp($event);\'>\n\n                            </ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="supplier.address" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="email" placeholder="Email" name="email" [(ngModel)]="supplier.email" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="supplier.phoneno" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Remark" maxlength="50" name="remark" [(ngModel)]="supplier.remark" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n                <ion-col class="signup-col">\n\n                    <button ion-button class="submit-btn" full type="submit" [disabled]="supplier.myForm">Add Supplier</button>\n\n                </ion-col>\n\n            </ion-row>\n\n        </form>\n\n    </div>\n\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\supplier\supplier.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__["a" /* Toast */]])
 ], SupplierPage);
@@ -521,8 +509,8 @@ SupplierPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SupplierListPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__supplier_supplier__ = __webpack_require__(105);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -576,7 +564,7 @@ var SupplierListPage = SupplierListPage_1 = (function () {
                 console.log(res, 'select console');
                 _this.suppliersArray = [];
                 for (var i = 0; i < res.rows.length; i++) {
-                    _this.suppliersArray.push({ rowid: res.rows.item(i).rowid, sname: res.rows.item(i).sname, address: res.rows.item(i).address, phoneno: res.rows.item(i).phoneno });
+                    _this.suppliersArray.push({ rowid: res.rows.item(i).rowid, sname: res.rows.item(i).sname, address: res.rows.item(i).address, email: res.rows.item(i).email, phoneno: res.rows.item(i).phoneno, remark: res.rows.item(i).remark });
                 }
                 console.log(_this.suppliersArray, 'select console');
             })
@@ -641,86 +629,12 @@ var SupplierListPage = SupplierListPage_1 = (function () {
 }());
 SupplierListPage = SupplierListPage_1 = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\supplierlist\supplierlist.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Supplier List\n      <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon>\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list *ngIf="!selectedItem">\n        <ion-item class="item_list_align" *ngFor="let supplier of suppliersArray" (click)="itemTapped($event, supplier)">\n            <ion-icon name="leaf" item-start></ion-icon>\n            {{supplier.sname}}\n        </ion-item>\n    </ion-list>\n    <div *ngIf="selectedItem">\n        <ion-card>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Name</h2>\n                <p class="text_align_left">{{selectedItem.sname}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Address</h2>\n                <p class="text_align_left">{{selectedItem.address}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Phone Number</h2>\n                <p class="text_align_left">{{selectedItem.phoneno}}</p>\n            </ion-item>\n            <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row>\n        </ion-card>\n    </div>\n    <!-- <ion-fab right bottom>\n        <button ion-fab color="light">\n           <ion-icon name="search"></ion-icon>\n        </button>\n    </ion-fab> -->\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\supplierlist\supplierlist.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\supplierlist\supplierlist.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Supplier List\n      <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon>\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list *ngIf="!selectedItem">\n        <ion-item class="item_list_align" *ngFor="let supplier of suppliersArray" (click)="itemTapped($event, supplier)">\n            <ion-icon name="leaf" item-start></ion-icon>\n            {{supplier.sname}}\n        </ion-item>\n    </ion-list>\n    <div *ngIf="selectedItem">\n        <ion-card>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Name</h2>\n                <p class="text_align_left">{{selectedItem.sname}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Address</h2>\n                <p class="text_align_left">{{selectedItem.address}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Email</h2>\n                <p class="text_align_left">{{selectedItem.email}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Phone Number</h2>\n                <p class="text_align_left">{{selectedItem.phoneno}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Remark</h2>\n                <p class="text_align_left">{{selectedItem.remark}}</p>\n            </ion-item>\n            <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row>\n        </ion-card>\n    </div>\n    <!-- <ion-fab right bottom>\n        <button ion-fab color="light">\n           <ion-icon name="search"></ion-icon>\n        </button>\n    </ion-fab> -->\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\supplierlist\supplierlist.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
 ], SupplierListPage);
 
 var SupplierListPage_1;
-// @Component({
-//     template: 
-//     `<ion-header>
-//           <ion-toolbar>
-//             <ion-title>
-//                 Description
-//             </ion-title>
-//             <ion-buttons start>
-//               <button ion-button (click)="dismiss()">
-//                 <span ion-text color="primary" showWhen="ios">Cancel</span>
-//                 <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
-//               </button>
-//             </ion-buttons>
-//           </ion-toolbar>
-//         </ion-header>
-//         <ion-content>
-//           <ion-list>
-//               <ion-item>
-//                 <ion-avatar item-start>
-//                   <img src="{{character.image}}">
-//                 </ion-avatar>
-//                 <h2>{{character.name}}</h2>
-//                 <p>{{character.quote}}</p>
-//               </ion-item>
-//               <ion-item *ngFor="let item of character['items']">
-//                 {{item.title}}
-//                 <ion-note item-end>
-//                   {{item.note}}
-//                 </ion-note>
-//               </ion-item>
-//           </ion-list>
-//     </ion-content>`
-// })
-// export class ModalContentPage {
-//     character;
-//     constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController) {
-//         var characters = [
-//             {
-//                 name: 'Gollum',
-//                 quote: 'Sneaky little hobbitses!',
-//                 image: 'assets/img/avatar-gollum.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'River Folk' },
-//                     { title: 'Alter Ego', note: 'Smeagol' }
-//                 ]
-//             },
-//             {
-//                 name: 'Frodo',
-//                 quote: 'Go back, Sam! I\'m going to Mordor alone!',
-//                 image: 'assets/img/avatar-frodo.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'Shire Folk' },
-//                     { title: 'Weapon', note: 'Sting' }
-//                 ]
-//             },
-//             {
-//                 name: 'Samwise Gamgee',
-//                 quote: 'What we need is a few good taters.',
-//                 image: 'assets/img/avatar-samwise.jpg',
-//                 items: [
-//                     { title: 'Race', note: 'Hobbit' },
-//                     { title: 'Culture', note: 'Shire Folk' },
-//                     { title: 'Nickname', note: 'Sam' }
-//                 ]
-//             }
-//         ];
-//         this.character = characters[this.params.get('charNum')];
-//     }
-//     dismiss() {
-//         this.viewCtrl.dismiss();
-//     }
-// }
 //# sourceMappingURL=supplierlist.js.map
 
 /***/ }),
@@ -732,9 +646,9 @@ var SupplierListPage_1;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SalesPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__saleslist_saleslist__ = __webpack_require__(108);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -925,8 +839,8 @@ SalesPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SalesListPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sales_sales__ = __webpack_require__(107);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1047,9 +961,9 @@ var SalesListPage_1;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PaymentPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__paymentlist_paymentlist__ = __webpack_require__(110);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1161,8 +1075,8 @@ PaymentPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PaymentListPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__payment_payment__ = __webpack_require__(109);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1283,9 +1197,9 @@ var PaymentListPage_1;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExpenseManagerPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__expensemanagerlist_expensemanagerlist__ = __webpack_require__(112);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1386,8 +1300,8 @@ ExpenseManagerPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExpenseManagerListPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__expensemanager_expensemanager__ = __webpack_require__(111);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1522,7 +1436,233 @@ var ExpenseManagerListPage_1;
 
 /***/ }),
 
-/***/ 121:
+/***/ 113:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CustomerPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__customerlist_customerlist__ = __webpack_require__(114);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+var ContactInfo = (function () {
+    function ContactInfo() {
+    }
+    return ContactInfo;
+}());
+var CustomerPage = (function () {
+    function CustomerPage(navCtrl, navParams, fb, sqlite, toast) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.fb = fb;
+        this.sqlite = sqlite;
+        this.toast = toast;
+        this.information = [];
+        // data = { date:"", type:"", description:"", amount:"" };
+        this.customer = { cname: "", address: "", email: "", phoneno: "", remark: "", myForm: true };
+        this.customer.myForm = true;
+    }
+    CustomerPage.prototype.keyUp = function (event) {
+        console.log(this.customer.cname, this.customer.address, this.customer.phoneno);
+        if (this.customer.cname != "" && this.customer.address != "" && this.customer.email != "" && this.customer.phoneno != "" && this.customer.remark != "") {
+            this.customer.myForm = false;
+        }
+        else {
+            this.customer.myForm = true;
+        }
+    };
+    CustomerPage.prototype.submitForm = function (value) {
+        var _this = this;
+        this.sqlite.create({
+            name: 'ionicdb.db',
+            location: 'default'
+        }).then(function (db) {
+            db.executeSql('CREATE TABLE IF NOT EXISTS customer(rowid INTEGER PRIMARY KEY, cname TEXT, address TEXT, email TEXT, phoneno TEXT, remark TEXT)', {})
+                .then(function (res) {
+                db.executeSql('INSERT INTO customer VALUES(NULL,?,?,?,?,?)', [_this.customer.cname, _this.customer.address, _this.customer.email, _this.customer.phoneno, _this.customer.remark])
+                    .then(function (res) {
+                    console.log(res);
+                    _this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_5__customerlist_customerlist__["a" /* CustomerListPage */]);
+                    // this.getData();
+                })
+                    .catch(function (e) { return console.log(e); });
+            })
+                .catch(function (e) { return console.log(e); });
+        }).catch(function (e) { return console.log(e); });
+    };
+    // addContact() {
+    //     this.information.push(new ContactInfo());
+    // }
+    CustomerPage.prototype.clickLink = function (type) {
+        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_5__customerlist_customerlist__["a" /* CustomerListPage */]);
+    };
+    return CustomerPage;
+}());
+CustomerPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-list',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\customer\customer.html"*/'<ion-header>\n\n    <ion-navbar>\n\n        <button ion-button menuToggle>\n\n          <ion-icon name="menu"></ion-icon>\n\n        </button>\n\n         <ion-title>\n\n            Add customer\n\n            <ion-icon title="customer List" role="img" class="icon icon-md ion-md-list-box item-icon pull-right" aria-label="list-box" ng-reflect-name="list-box" (click)=\'clickLink();\'></ion-icon>\n\n        </ion-title>\n\n    </ion-navbar>\n\n</ion-header>\n\n<ion-content class="product-content" padding>\n\n    <div class="login-box">\n\n        <form class="form-horizontal" (ngSubmit)="submitForm()" novalidate>\n\n            <ion-row>\n\n                <ion-col>\n\n                    <ion-list inset>\n\n                        <!-- <div class="" *ngIf="!customerForm.controls.customer_name.valid  && (customerForm.controls.customer_name.dirty || submitAttempt)">* Please enter valid customer name.</div> -->\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="customer Name" [(ngModel)]="customer.cname" name="cname" (keyup)=\'keyUp($event);\'>\n\n                            </ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="customer.address" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="email" placeholder="Email" name="email" [(ngModel)]="customer.email" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="customer.phoneno" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                        <ion-item class="product-item" padding>\n\n                            <ion-input type="text" placeholder="Remark" maxlength="50" name="remark" [(ngModel)]="customer.remark" (keyup)=\'keyUp($event);\'></ion-input>\n\n                        </ion-item>\n\n                    </ion-list>\n\n                </ion-col>\n\n            </ion-row>\n\n            <ion-row>\n\n                <ion-col class="signup-col">\n\n                    <button ion-button class="submit-btn" full type="submit" [disabled]="customer.myForm">Add Customer</button>\n\n                </ion-col>\n\n            </ion-row>\n\n        </form>\n\n    </div>\n\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\customer\customer.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* FormBuilder */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_4__ionic_native_toast__["a" /* Toast */]])
+], CustomerPage);
+
+//# sourceMappingURL=customer.js.map
+
+/***/ }),
+
+/***/ 114:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CustomerListPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__customer_customer__ = __webpack_require__(113);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+// import { ModalContentPage } from '../productlist/modal-content';
+var CustomerListPage = CustomerListPage_1 = (function () {
+    function CustomerListPage(navCtrl, navParams, sqlite, alertCtrl) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.sqlite = sqlite;
+        this.alertCtrl = alertCtrl;
+        this.customersArray = [];
+        // customersArray: Array<{name: string, address: string, phoneno: string}>;
+        this.totalIncome = 0;
+        this.totalExpense = 0;
+        this.balance = 0;
+        // If we navigated to this page, we will have an item available as a nav param
+        this.selectedItem = navParams.get('item');
+    }
+    CustomerListPage.prototype.itemTapped = function (event, item) {
+        // console.log(this.selectedItems)
+        // That's right, we're pushing to ourselves!
+        this.navCtrl.push(CustomerListPage_1, {
+            item: item
+        });
+    };
+    CustomerListPage.prototype.ionViewDidLoad = function () {
+        this.getData();
+    };
+    CustomerListPage.prototype.ionViewWillEnter = function () {
+        this.getData();
+    };
+    CustomerListPage.prototype.getData = function () {
+        var _this = this;
+        this.sqlite.create({
+            name: 'ionicdb.db',
+            location: 'default'
+        }).then(function (db) {
+            db.executeSql('SELECT * FROM customer ORDER BY rowid DESC', {})
+                .then(function (res) {
+                console.log(res, 'select console');
+                _this.customersArray = [];
+                for (var i = 0; i < res.rows.length; i++) {
+                    _this.customersArray.push({ rowid: res.rows.item(i).rowid, sname: res.rows.item(i).sname, address: res.rows.item(i).address, email: res.rows.item(i).email, phoneno: res.rows.item(i).phoneno, remark: res.rows.item(i).remark });
+                }
+                console.log(_this.customersArray, 'select console');
+            })
+                .catch(function (e) {
+                console.log(e);
+            });
+        }).catch(function (e) {
+            console.log(e);
+        });
+    };
+    CustomerListPage.prototype.deleteData = function (rowid) {
+        var _this = this;
+        var alert = this.alertCtrl.create({
+            title: 'Confirm Delete',
+            message: 'Are you sure you want to delete this item ?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: function () {
+                        console.log('Cancel clicked');
+                    }
+                },
+                {
+                    text: 'Delete',
+                    handler: function () {
+                        _this.sqlite.create({
+                            name: 'ionicdb.db',
+                            location: 'default'
+                        }).then(function (db) {
+                            db.executeSql('DELETE FROM customer WHERE rowid=?', [rowid])
+                                .then(function (res) {
+                                _this.selectedItem = false;
+                                console.log(res);
+                                _this.getData();
+                            })
+                                .catch(function (e) { return console.log(e); });
+                        }).catch(function (e) { return console.log(e); });
+                    }
+                }
+            ]
+        });
+        alert.present();
+    };
+    // deleteData(rowid) {
+    //     this.sqlite.create({
+    //         name: 'ionicdb.db',
+    //         location: 'default'
+    //     }).then((db: SQLiteObject) => {
+    //         db.executeSql('DELETE FROM customer WHERE rowid=?', [rowid])
+    //         .then(res => {
+    //           console.log(res);
+    //           this.getData();
+    //         })
+    //     .catch(e => console.log(e));
+    //     }).catch(e => console.log(e));
+    // }
+    CustomerListPage.prototype.clickLink = function (type) {
+        this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_3__customer_customer__["a" /* CustomerPage */]);
+    };
+    return CustomerListPage;
+}());
+CustomerListPage = CustomerListPage_1 = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\customerlist\customerlist.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Customer List\n      <ion-icon title="Add Customer" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon>\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list *ngIf="!selectedItem">\n        <ion-item class="item_list_align" *ngFor="let customer of customersArray" (click)="itemTapped($event, customer)">\n            <ion-icon name="leaf" item-start></ion-icon>\n            {{customer.sname}}\n        </ion-item>\n    </ion-list>\n    <div *ngIf="selectedItem">\n        <ion-card>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Name</h2>\n                <p class="text_align_left">{{selectedItem.cname}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Address</h2>\n                <p class="text_align_left">{{selectedItem.address}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Email</h2>\n                <p class="text_align_left">{{selectedItem.email}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Phone Number</h2>\n                <p class="text_align_left">{{selectedItem.phoneno}}</p>\n            </ion-item>\n            <ion-item>\n                <ion-icon name="star" item-start large></ion-icon>\n                <h2 class="text_align_left">Remark</h2>\n                <p class="text_align_left">{{selectedItem.remark}}</p>\n            </ion-item>\n            <ion-row>\n                <ion-col>\n                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">\n                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>\n                        <div>Delete</div>\n                    </button>\n                </ion-col>\n            </ion-row>\n        </ion-card>\n    </div>\n    <!-- <ion-fab right bottom>\n        <button ion-fab color="light">\n           <ion-icon name="search"></ion-icon>\n        </button>\n    </ion-fab> -->\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\customerlist\customerlist.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_sqlite__["a" /* SQLite */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
+], CustomerListPage);
+
+var CustomerListPage_1;
+//# sourceMappingURL=customerlist.js.map
+
+/***/ }),
+
+/***/ 123:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -1535,11 +1675,11 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 121;
+webpackEmptyAsyncContext.id = 123;
 
 /***/ }),
 
-/***/ 162:
+/***/ 164:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -1552,17 +1692,45 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 162;
+webpackEmptyAsyncContext.id = 164;
 
 /***/ }),
 
-/***/ 209:
+/***/ 211:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PaymentDuePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var PaymentDuePage = (function () {
+    function PaymentDuePage() {
+    }
+    return PaymentDuePage;
+}());
+PaymentDuePage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\paymentdue\paymentdue.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Payment Due\n      <!-- <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon> -->\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div style="overflow: auto;margin-top:50px;">\n        <table class="reporttable">\n            <tr>\n                <th>To Be Paid</th>\n                <th>Supplier</th>\n                <th>Amount Due</th>\n            </tr>\n            <tr>\n                <td>oneplus</td>\n                <td>43</td>\n                <td>fsdfs</td>\n            </tr>\n            <tr>\n                <td>oppo</td>\n                <td>345</td>\n                <td>54sd</td>\n            </tr>\n        </table>\n    </div>\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\paymentdue\paymentdue.html"*/
+    })
+], PaymentDuePage);
+
+//# sourceMappingURL=paymentdue.js.map
+
+/***/ }),
+
+/***/ 212:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(231);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -1570,36 +1738,43 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 228:
+/***/ 231:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(269);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(272);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(278);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_register_register__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_register_register__ = __webpack_require__(282);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_product_product__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_supplier_supplier__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_expensemanager_expensemanager__ = __webpack_require__(111);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_sales_sales__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_payment_payment__ = __webpack_require__(109);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_productlist_productlist__ = __webpack_require__(104);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_supplierlist_supplierlist__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_saleslist_saleslist__ = __webpack_require__(108);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_expensemanagerlist_expensemanagerlist__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_paymentlist_paymentlist__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__ionic_native_status_bar__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__ionic_native_splash_screen__ = __webpack_require__(204);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__ionic_native_file__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__ionic_native_transfer__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_file_path__ = __webpack_require__(207);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_camera__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_sqlite__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_toast__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_customer_customer__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_expensemanager_expensemanager__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_sales_sales__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_payment_payment__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_productlist_productlist__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pages_supplierlist_supplierlist__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pages_customerlist_customerlist__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pages_saleslist_saleslist__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_expensemanagerlist_expensemanagerlist__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pages_paymentlist_paymentlist__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pages_stockreport_stockreport__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pages_salesreport_salesreport__ = __webpack_require__(284);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__pages_purchasereport_purchasereport__ = __webpack_require__(285);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__pages_paymentreport_paymentreport__ = __webpack_require__(286);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__pages_paymentdue_paymentdue__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_status_bar__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__ionic_native_splash_screen__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__ionic_native_file__ = __webpack_require__(207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__ionic_native_transfer__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__ionic_native_file_path__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ionic_native_camera__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__ionic_native_sqlite__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__ionic_native_toast__ = __webpack_require__(29);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1616,16 +1791,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-// import { PurchasePage } from '../pages/purchase/purchase';
 
 
 
 
-// import { PurchaseListPage } from '../pages/purchaselist/purchaselist';
 
 
 
-// import { ModalContentPage } from '../pages/productlist/productlist';
+
+
+
+
+
+
+
 
 
 
@@ -1648,17 +1827,21 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__pages_register_register__["a" /* RegisterPage */],
             __WEBPACK_IMPORTED_MODULE_7__pages_product_product__["a" /* ProductPage */],
             __WEBPACK_IMPORTED_MODULE_8__pages_supplier_supplier__["a" /* SupplierPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_payment_payment__["a" /* PaymentPage */],
-            __WEBPACK_IMPORTED_MODULE_9__pages_expensemanager_expensemanager__["a" /* ExpenseManagerPage */],
-            // PurchasePage,
-            __WEBPACK_IMPORTED_MODULE_10__pages_sales_sales__["a" /* SalesPage */],
-            __WEBPACK_IMPORTED_MODULE_12__pages_productlist_productlist__["a" /* ProductListPage */],
-            __WEBPACK_IMPORTED_MODULE_13__pages_supplierlist_supplierlist__["a" /* SupplierListPage */],
-            // PurchaseListPage,
-            __WEBPACK_IMPORTED_MODULE_14__pages_saleslist_saleslist__["a" /* SalesListPage */],
-            __WEBPACK_IMPORTED_MODULE_16__pages_paymentlist_paymentlist__["a" /* PaymentListPage */],
-            __WEBPACK_IMPORTED_MODULE_15__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */]
-            // ModalContentPage
+            __WEBPACK_IMPORTED_MODULE_9__pages_customer_customer__["a" /* CustomerPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_payment_payment__["a" /* PaymentPage */],
+            __WEBPACK_IMPORTED_MODULE_10__pages_expensemanager_expensemanager__["a" /* ExpenseManagerPage */],
+            __WEBPACK_IMPORTED_MODULE_11__pages_sales_sales__["a" /* SalesPage */],
+            __WEBPACK_IMPORTED_MODULE_13__pages_productlist_productlist__["a" /* ProductListPage */],
+            __WEBPACK_IMPORTED_MODULE_14__pages_supplierlist_supplierlist__["a" /* SupplierListPage */],
+            __WEBPACK_IMPORTED_MODULE_15__pages_customerlist_customerlist__["a" /* CustomerListPage */],
+            __WEBPACK_IMPORTED_MODULE_16__pages_saleslist_saleslist__["a" /* SalesListPage */],
+            __WEBPACK_IMPORTED_MODULE_18__pages_paymentlist_paymentlist__["a" /* PaymentListPage */],
+            __WEBPACK_IMPORTED_MODULE_17__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */],
+            __WEBPACK_IMPORTED_MODULE_19__pages_stockreport_stockreport__["a" /* StockReportPage */],
+            __WEBPACK_IMPORTED_MODULE_20__pages_salesreport_salesreport__["a" /* SalesReportPage */],
+            __WEBPACK_IMPORTED_MODULE_21__pages_purchasereport_purchasereport__["a" /* PurchaseReportPage */],
+            __WEBPACK_IMPORTED_MODULE_22__pages_paymentreport_paymentreport__["a" /* PaymentReportPage */],
+            __WEBPACK_IMPORTED_MODULE_23__pages_paymentdue_paymentdue__["a" /* PaymentDuePage */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -1674,28 +1857,32 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__pages_register_register__["a" /* RegisterPage */],
             __WEBPACK_IMPORTED_MODULE_7__pages_product_product__["a" /* ProductPage */],
             __WEBPACK_IMPORTED_MODULE_8__pages_supplier_supplier__["a" /* SupplierPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_payment_payment__["a" /* PaymentPage */],
-            __WEBPACK_IMPORTED_MODULE_9__pages_expensemanager_expensemanager__["a" /* ExpenseManagerPage */],
-            // PurchasePage,
-            __WEBPACK_IMPORTED_MODULE_10__pages_sales_sales__["a" /* SalesPage */],
-            __WEBPACK_IMPORTED_MODULE_12__pages_productlist_productlist__["a" /* ProductListPage */],
-            __WEBPACK_IMPORTED_MODULE_13__pages_supplierlist_supplierlist__["a" /* SupplierListPage */],
-            // PurchaseListPage,
-            __WEBPACK_IMPORTED_MODULE_14__pages_saleslist_saleslist__["a" /* SalesListPage */],
-            __WEBPACK_IMPORTED_MODULE_16__pages_paymentlist_paymentlist__["a" /* PaymentListPage */],
-            __WEBPACK_IMPORTED_MODULE_15__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */]
-            // ModalContentPage
+            __WEBPACK_IMPORTED_MODULE_9__pages_customer_customer__["a" /* CustomerPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_payment_payment__["a" /* PaymentPage */],
+            __WEBPACK_IMPORTED_MODULE_10__pages_expensemanager_expensemanager__["a" /* ExpenseManagerPage */],
+            __WEBPACK_IMPORTED_MODULE_11__pages_sales_sales__["a" /* SalesPage */],
+            __WEBPACK_IMPORTED_MODULE_13__pages_productlist_productlist__["a" /* ProductListPage */],
+            __WEBPACK_IMPORTED_MODULE_14__pages_supplierlist_supplierlist__["a" /* SupplierListPage */],
+            __WEBPACK_IMPORTED_MODULE_15__pages_customerlist_customerlist__["a" /* CustomerListPage */],
+            __WEBPACK_IMPORTED_MODULE_16__pages_saleslist_saleslist__["a" /* SalesListPage */],
+            __WEBPACK_IMPORTED_MODULE_18__pages_paymentlist_paymentlist__["a" /* PaymentListPage */],
+            __WEBPACK_IMPORTED_MODULE_17__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */],
+            __WEBPACK_IMPORTED_MODULE_19__pages_stockreport_stockreport__["a" /* StockReportPage */],
+            __WEBPACK_IMPORTED_MODULE_20__pages_salesreport_salesreport__["a" /* SalesReportPage */],
+            __WEBPACK_IMPORTED_MODULE_21__pages_purchasereport_purchasereport__["a" /* PurchaseReportPage */],
+            __WEBPACK_IMPORTED_MODULE_22__pages_paymentreport_paymentreport__["a" /* PaymentReportPage */],
+            __WEBPACK_IMPORTED_MODULE_23__pages_paymentdue_paymentdue__["a" /* PaymentDuePage */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_17__ionic_native_status_bar__["a" /* StatusBar */],
-            __WEBPACK_IMPORTED_MODULE_18__ionic_native_splash_screen__["a" /* SplashScreen */],
-            __WEBPACK_IMPORTED_MODULE_19__ionic_native_file__["a" /* File */],
-            __WEBPACK_IMPORTED_MODULE_20__ionic_native_transfer__["a" /* Transfer */],
-            __WEBPACK_IMPORTED_MODULE_22__ionic_native_camera__["a" /* Camera */],
-            __WEBPACK_IMPORTED_MODULE_21__ionic_native_file_path__["a" /* FilePath */],
+            __WEBPACK_IMPORTED_MODULE_24__ionic_native_status_bar__["a" /* StatusBar */],
+            __WEBPACK_IMPORTED_MODULE_25__ionic_native_splash_screen__["a" /* SplashScreen */],
+            __WEBPACK_IMPORTED_MODULE_26__ionic_native_file__["a" /* File */],
+            __WEBPACK_IMPORTED_MODULE_27__ionic_native_transfer__["a" /* Transfer */],
+            __WEBPACK_IMPORTED_MODULE_29__ionic_native_camera__["a" /* Camera */],
+            __WEBPACK_IMPORTED_MODULE_28__ionic_native_file_path__["a" /* FilePath */],
             { provide: __WEBPACK_IMPORTED_MODULE_1__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["d" /* IonicErrorHandler */] },
-            __WEBPACK_IMPORTED_MODULE_23__ionic_native_sqlite__["a" /* SQLite */],
-            __WEBPACK_IMPORTED_MODULE_24__ionic_native_toast__["a" /* Toast */]
+            __WEBPACK_IMPORTED_MODULE_30__ionic_native_sqlite__["a" /* SQLite */],
+            __WEBPACK_IMPORTED_MODULE_31__ionic_native_toast__["a" /* Toast */]
             // FileTransfer,
             // FileUploadOptions,
             // FileTransferObject,
@@ -1707,21 +1894,23 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 269:
+/***/ 272:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_productlist_productlist__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_supplierlist_supplierlist__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_saleslist_saleslist__ = __webpack_require__(108);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_paymentlist_paymentlist__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_expensemanagerlist_expensemanagerlist__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_customerlist_customerlist__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_saleslist_saleslist__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_paymentlist_paymentlist__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_expensemanagerlist_expensemanagerlist__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_paymentdue_paymentdue__ = __webpack_require__(211);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1741,23 +1930,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var MyApp = (function () {
     function MyApp(platform, statusBar, splashScreen, alertCtrl) {
         this.platform = platform;
         this.statusBar = statusBar;
         this.splashScreen = splashScreen;
         this.alertCtrl = alertCtrl;
-        this.rootPage = __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */];
+        this.rootPage = __WEBPACK_IMPORTED_MODULE_11__pages_paymentdue_paymentdue__["a" /* PaymentDuePage */];
         this.initializeApp();
         this.alertPresented = false;
         // used for an example of ngFor and navigation
         this.pages = [
             { title: 'Home', component: __WEBPACK_IMPORTED_MODULE_4__pages_home_home__["a" /* HomePage */] },
             { title: 'Supplier', component: __WEBPACK_IMPORTED_MODULE_6__pages_supplierlist_supplierlist__["a" /* SupplierListPage */] },
+            { title: 'Customer', component: __WEBPACK_IMPORTED_MODULE_7__pages_customerlist_customerlist__["a" /* CustomerListPage */] },
             { title: 'Product', component: __WEBPACK_IMPORTED_MODULE_5__pages_productlist_productlist__["a" /* ProductListPage */] },
-            { title: 'Payment Histoy', component: __WEBPACK_IMPORTED_MODULE_8__pages_paymentlist_paymentlist__["a" /* PaymentListPage */] },
-            { title: 'Sales', component: __WEBPACK_IMPORTED_MODULE_7__pages_saleslist_saleslist__["a" /* SalesListPage */] },
-            { title: 'Expense Manager', component: __WEBPACK_IMPORTED_MODULE_9__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */] }
+            { title: 'Payment Histoy', component: __WEBPACK_IMPORTED_MODULE_9__pages_paymentlist_paymentlist__["a" /* PaymentListPage */] },
+            { title: 'Sales', component: __WEBPACK_IMPORTED_MODULE_8__pages_saleslist_saleslist__["a" /* SalesListPage */] },
+            { title: 'Expense Manager', component: __WEBPACK_IMPORTED_MODULE_10__pages_expensemanagerlist_expensemanagerlist__["a" /* ExpenseManagerListPage */] }
         ];
     }
     MyApp.prototype.initializeApp = function () {
@@ -1807,7 +1999,7 @@ __decorate([
     __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Nav */])
 ], MyApp.prototype, "nav", void 0);
 MyApp = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\projects\ionic\myApp\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n  \n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"E:\projects\ionic\myApp\src\app\app.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\projects\ionic\myApp\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        <ion-icon name="arrow-forward"></ion-icon> {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n  \n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"E:\projects\ionic\myApp\src\app\app.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["b" /* AlertController */]])
 ], MyApp);
@@ -1816,14 +2008,14 @@ MyApp = __decorate([
 
 /***/ }),
 
-/***/ 278:
+/***/ 281:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__home_home__ = __webpack_require__(53);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1869,7 +2061,7 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 279:
+/***/ 282:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1877,7 +2069,7 @@ LoginPage = __decorate([
 /* unused harmony export matchOtherValidator */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__home_home__ = __webpack_require__(53);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1956,18 +2148,131 @@ function matchOtherValidator(otherControlName) {
 
 /***/ }),
 
+/***/ 283:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StockReportPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var StockReportPage = (function () {
+    function StockReportPage() {
+    }
+    return StockReportPage;
+}());
+StockReportPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\stockreport\stockreport.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Stock Report\n      <!-- <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon> -->\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div style="overflow: auto;margin-top:50px;">\n        <table class="reporttable">\n            <tr>\n                <th>Product</th>\n                <th>Start Date</th>\n                <th>Total Purchase</th>\n                <th>Total Sold</th>\n                <th>Available Quantity</th>\n                <th>PNL</th>\n            </tr>\n            <tr>\n                <td>oneplus</td>\n                <td>43</td>\n                <td>fsdfs</td>\n                <td>sdfsd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n            <tr>\n                <td>oppo</td>\n                <td>345</td>\n                <td>54sd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n        </table>\n    </div>\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\stockreport\stockreport.html"*/
+    })
+], StockReportPage);
+
+//# sourceMappingURL=stockreport.js.map
+
+/***/ }),
+
+/***/ 284:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SalesReportPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var SalesReportPage = (function () {
+    function SalesReportPage() {
+    }
+    return SalesReportPage;
+}());
+SalesReportPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\salesreport\salesreport.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Sales Report\n      <!-- <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon> -->\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div style="overflow: auto;margin-top:50px;">\n        <table class="reporttable">\n            <tr>\n                <th>Product</th>\n                <th>Sales Date</th>\n                <th>Quantity</th>\n                <th>Customer</th>\n                <th>Per Unit Price</th>\n                <th>Total Price</th>\n            </tr>\n            <tr>\n                <td>oneplus</td>\n                <td>43</td>\n                <td>fsdfs</td>\n                <td>sdfsd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n            <tr>\n                <td>oppo</td>\n                <td>345</td>\n                <td>54sd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n        </table>\n    </div>\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\salesreport\salesreport.html"*/
+    })
+], SalesReportPage);
+
+//# sourceMappingURL=salesreport.js.map
+
+/***/ }),
+
+/***/ 285:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PurchaseReportPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var PurchaseReportPage = (function () {
+    function PurchaseReportPage() {
+    }
+    return PurchaseReportPage;
+}());
+PurchaseReportPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\purchasereport\purchasereport.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Purchase Report\n      <!-- <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon> -->\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div style="overflow: auto;margin-top:50px;">\n        <table class="reporttable">\n            <tr>\n                <th>Product</th>\n                <th>Product Date</th>\n                <th>Quantity</th>\n                <th>Supplier</th>\n                <th>Per Unit Price</th>\n                <th>Total Price</th>\n            </tr>\n            <tr>\n                <td>oneplus</td>\n                <td>43</td>\n                <td>fsdfs</td>\n                <td>sdfsd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n            <tr>\n                <td>oppo</td>\n                <td>345</td>\n                <td>54sd</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n                <td>sdfsdf</td>\n            </tr>\n        </table>\n    </div>\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\purchasereport\purchasereport.html"*/
+    })
+], PurchaseReportPage);
+
+//# sourceMappingURL=purchasereport.js.map
+
+/***/ }),
+
+/***/ 286:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PaymentReportPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var PaymentReportPage = (function () {
+    function PaymentReportPage() {
+    }
+    return PaymentReportPage;
+}());
+PaymentReportPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\paymentreport\paymentreport.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>\n      Payment Report\n      <!-- <ion-icon title="Add Supplier" role="img" class="icon icon-md ion-md-add item-icon pull-right" aria-label="add" ng-reflect-name="add" (click)=\'clickLink();\'></ion-icon> -->\n    </ion-title>\n    \n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <div style="overflow: auto;margin-top:50px;">\n        <table class="reporttable">\n            <tr>\n                <th>Type</th>\n                <th>Product</th>\n                <th>Party Name</th>\n                <th>Amount</th>\n            </tr>\n            <tr>\n                <td>oneplus</td>\n                <td>43</td>\n                <td>fsdfs</td>\n                <td>sdfsd</td>\n            </tr>\n            <tr>\n                <td>oppo</td>\n                <td>345</td>\n                <td>54sd</td>\n                <td>sdfsdf</td>\n            </tr>\n        </table>\n    </div>\n</ion-content>\n'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\paymentreport\paymentreport.html"*/
+    })
+], PaymentReportPage);
+
+//# sourceMappingURL=paymentreport.js.map
+
+/***/ }),
+
 /***/ 53:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__product_product__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__supplier_supplier__ = __webpack_require__(105);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sales_sales__ = __webpack_require__(107);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__payment_payment__ = __webpack_require__(109);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__expensemanager_expensemanager__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__customer_customer__ = __webpack_require__(113);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1977,6 +2282,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -2004,12 +2310,15 @@ var HomePage = (function () {
         else if (type == "manager") {
             this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_6__expensemanager_expensemanager__["a" /* ExpenseManagerPage */]);
         }
+        else if (type == "customer") {
+            this.navCtrl.setRoot(__WEBPACK_IMPORTED_MODULE_7__customer_customer__["a" /* CustomerPage */]);
+        }
     };
     return HomePage;
 }());
 HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\home\home.html"*/'<ion-header>\n    <ion-navbar>\n        <button ion-button menuToggle>\n          <ion-icon name="menu"></ion-icon>\n        </button>\n        <ion-title>Home</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<!-- <ion-content padding>\n  <h3>Ionic Menu Starter</h3>\n\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.\n  </p>\n\n  <button ion-button secondary menuToggle>Toggle Menu</button>\n</ion-content> -->\n\n<!-- <div class="wrapper padding">\n    <div class="row">\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Product</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Purchase</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Supplier</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Users</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Sales</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Manager</div>\n        </div>\n    </div>\n</div>\n -->\n\n<ion-content padding>\n    <ion-grid>\n        <ion-row>\n            <ion-col col-12>\n                <div class="box height_100px text-center supplier_div" (click)=\'clickLink("supplier");\'>\n                    <a href="javascipt:;">Supplier</a>\n                </div>\n            </ion-col>\n            <ion-col col-12>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("product");\'>\n                    <a href="javascript:;">Product</a>\n                </div>\n            </ion-col>\n            <ion-col col-12>\n                <div class="box height_100px text-center payment_div" (click)=\'clickLink("payment");\'>\n                    <a href="javascript:;">Payment</a>\n                </div>\n            </ion-col>\n            <ion-col col-12>\n                <div class="box height_100px text-center sales_div" (click)=\'clickLink("sales");\'>\n                    <a href="javascipt:;">Sales</a>\n                </div>\n            </ion-col>\n            <ion-col col-12>\n                <div class="box height_100px text-center manager_div" (click)=\'clickLink("manager");\'>\n                    <a href="javascipt:;">Expense Manager</a>\n                </div>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\home\home.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"E:\projects\ionic\myApp\src\pages\home\home.html"*/'<ion-header>\n    <ion-navbar>\n        <button ion-button menuToggle>\n          <ion-icon name="menu"></ion-icon>\n        </button>\n        <ion-title>Home</ion-title>\n    </ion-navbar>\n</ion-header>\n\n<!-- <ion-content padding>\n  <h3>Ionic Menu Starter</h3>\n\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.\n  </p>\n\n  <button ion-button secondary menuToggle>Toggle Menu</button>\n</ion-content> -->\n\n<!-- <div class="wrapper padding">\n    <div class="row">\n        <div class="col-md-4 col-xs-6 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Product</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Purchase</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Supplier</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Users</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Sales</div>\n        </div>\n        <div class="col-md-4 col-xs-12 col-sm-12 padding_bottom_10px">\n            <div class="box height_100px te text-center">Manager</div>\n        </div>\n    </div>\n</div>\n -->\n\n<ion-content padding>\n    <ion-grid>\n        <ion-row>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("supplier");\'>\n                    <a href="javascipt:;">Supplier</a>\n                </div>\n            </ion-col>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("customer");\'>\n                    <a href="javascipt:;">Customer</a>\n                </div>\n            </ion-col>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("product");\'>\n                    <a href="javascript:;">Product</a>\n                </div>\n            </ion-col>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("payment");\'>\n                    <a href="javascript:;">Payment</a>\n                </div>\n            </ion-col>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("sales");\'>\n                    <a href="javascipt:;">Sales</a>\n                </div>\n            </ion-col>\n            <ion-col col-6>\n                <div class="box height_100px text-center product_div" (click)=\'clickLink("manager");\'>\n                    <a href="javascipt:;">Expense Manager</a>\n                </div>\n            </ion-col>\n        </ion-row>\n    </ion-grid>\n</ion-content>'/*ion-inline-end:"E:\projects\ionic\myApp\src\pages\home\home.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */]])
 ], HomePage);
@@ -2018,5 +2327,5 @@ HomePage = __decorate([
 
 /***/ })
 
-},[209]);
+},[212]);
 //# sourceMappingURL=main.js.map

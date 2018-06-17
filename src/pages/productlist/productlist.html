@@ -40,6 +40,12 @@
 
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
+                <h2 class="text_align_left">Product Description</h2>
+                <p class="text_align_left">{{selectedItem.pdescription}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="star" item-start large></ion-icon>
                 <h2 class="text_align_left">Date</h2>
                 <p class="text_align_left">{{selectedItem.pdate}}</p>
             </ion-item>
@@ -76,6 +82,20 @@
                     </button>
                 </ion-col>
             </ion-row>
+            <!-- <ion-row>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Delete</div>
+                    </button>
+                </ion-col>
+            </ion-row> -->
         </ion-card>
     </div>
     <!-- <ion-fab right bottom>

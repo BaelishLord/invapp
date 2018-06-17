@@ -15,34 +15,46 @@
             <ion-row class="content_block">
                 <ion-col>
                     <ion-list inset>
+                        <div class="productHeader">
+                            Product Details
+                        </div>
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Product Name" [(ngModel)]="product.pname" name="pname" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
                         <ion-item class="product-item" padding>
-                            <ion-input type="text" placeholder="Product ID" [(ngModel)]="product.pid" name="pid" (keyup)='keyUp($event);'></ion-input>
+                            <ion-input type="text" placeholder="Product Code" [(ngModel)]="product.pid" name="pid" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
+                        <div class="error-box color_red" *ngIf="product.productIdError">Please check Product Id.</div>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Product Description" [(ngModel)]="product.pdescription" name="pid" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+
+                        <div class="productHeader">
+                            Purchase Details
+                        </div>
                         <ion-item class="product-item" padding>
                             <ion-select placeholder="Product Supplier" [(ngModel)]="product.psupplier" name="psupplier">
                                 <ion-option *ngFor="let supplier of supplierArray" value="{{supplier.sname}}">{{supplier.sname}}</ion-option>
                             </ion-select>
                         </ion-item>
                         <ion-item class="product-item" padding>
-                            <ion-datetime placeholder="Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>
-                        </ion-item>
-                        <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Quantity" [(ngModel)]="product.pquantity" name="pquantity" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
-
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Per Unit Price" [(ngModel)]="product.unitprice" name="unitprice" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
-
-                        <ion-item class="product-item" padding>
-                            <ion-input type="text" placeholder="Paid Amount" [(ngModel)]="product.pamount" name="pamount" (keyup)='keyUp($event);'></ion-input>
-                        </ion-item>
-
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Total Price" [(ngModel)]="product.pprice" name="pprice" (keyup)='keyUp($event);' disabled></ion-input>
+                        </ion-item>
+
+                        <div class="productHeader">
+                            Payment Details
+                        </div>
+                        <ion-item class="product-item" padding>
+                            <ion-datetime placeholder="Payment Date" displayFormat="MMM DD YYYY" [(ngModel)]="product.pdate" name="pdate" pickerFormat="MMM DD YYYY"></ion-datetime>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Payment Amount" [(ngModel)]="product.pamount" name="pamount" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
                     </ion-list>
                 </ion-col>
@@ -59,7 +71,7 @@
                         <!-- </ion-item> -->
                         <ion-item class="product-item">     
                             <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
-                            <h3 [hidden]="lastImage !== null">Please Select Image!</h3>
+                            <h3 class="text-center" [hidden]="lastImage !== null">Please Select Image!</h3>
                         </ion-item>
                     </ion-list>
                 </ion-col>

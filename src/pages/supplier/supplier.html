@@ -23,9 +23,14 @@
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Address" name="address" [(ngModel)]="supplier.address" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
-
+                        <ion-item class="product-item" padding>
+                            <ion-input type="email" placeholder="Email" name="email" [(ngModel)]="supplier.email" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
                         <ion-item class="product-item" padding>
                             <ion-input type="text" placeholder="Phone Number" maxlength="10" name="phoneno" [(ngModel)]="supplier.phoneno" (keyup)='keyUp($event);'></ion-input>
+                        </ion-item>
+                        <ion-item class="product-item" padding>
+                            <ion-input type="text" placeholder="Remark" maxlength="50" name="remark" [(ngModel)]="supplier.remark" (keyup)='keyUp($event);'></ion-input>
                         </ion-item>
                     </ion-list>
                 </ion-col>

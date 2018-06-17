@@ -6,6 +6,7 @@ import { SupplierPage } from '../supplier/supplier';
 import { SalesPage } from '../sales/sales';
 import { PaymentPage } from '../payment/payment';
 import { ExpenseManagerPage } from '../expensemanager/expensemanager';
+import { CustomerPage } from '../customer/customer';
 
 @Component({
   selector: 'page-home',
@@ -28,6 +29,8 @@ export class HomePage {
             this.navCtrl.setRoot(PaymentPage);
         } else if (type == "manager") {
   	    	this.navCtrl.setRoot(ExpenseManagerPage);
+        } else if (type == "customer") {
+          this.navCtrl.setRoot(CustomerPage);
         }
   	}	
 

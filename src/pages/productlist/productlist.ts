@@ -53,30 +53,20 @@ export class ProductListPage {
           name: 'ionicdb.db',
           location: 'default'
         }).then((db: SQLiteObject) => {
-          db.executeSql('SELECT * FROM product ORDER BY rowid DESC',{})
+          db.executeSql('SELECT p.*, ph.*, pp.* from product p left join purchase ph on p.pid = ph.productId left join purchasepayment pp on p.pid = pp.productId',{})
             .then(res => {
                 console.log(res, 'select console');
                 this.productArray = [];
                 for(var i=0; i<res.rows.length; i++) {
-                    this.productArray.push({rowid:res.rows.item(i).rowid,pname:res.rows.item(i).pname,pid:res.rows.item(i).pid,pdate:res.rows.item(i).pdate,pquantity:res.rows.item(i).pquantity,psupplier:res.rows.item(i).psupplier,pprice:res.rows.item(i).pprice,unitprice:res.rows.item(i).unitprice,file:res.rows.item(i).file})
+                    this.productArray.push({rowid:res.rows.item(i).rowid,pname:res.rows.item(i).pname,pid:res.rows.item(i).pid,pdescription:res.rows.item(i).pdescription,pdate:res.rows.item(i).pdate,pquantity:res.rows.item(i).pquantity,psupplier:res.rows.item(i).psupplier,pprice:res.rows.item(i).pprice,unitprice:res.rows.item(i).unitprice,file:res.rows.item(i).file})
                 }
                 console.log(this.productArray, 'select console');
             })
             .catch(e => {
               console.log(e);
-              // this.toast.show(e, '5000', 'center').subscribe(
-              //   toast => {
-                  // console.log(toast);
-              //   }
-              // );
             });
         }).catch(e => {
           console.log(e);
-          // this.toast.show(e, '5000', 'center').subscribe(
-          //   toast => {
-              // console.log(toast);
-          //   }
-          // );
         });
     }
 

@@ -19,10 +19,11 @@ declare let cordova: any;
 })
 export class ProductPage {
 	lastImage: string = null;
+	cursor: string = null;
   	loading: Loading;
   	setHideShow: boolean = false;
 
-  	product = {pname: "", pid: "", psupplier: "", pdate:"", pquantity: "", pamount: "", pprice: "",unitprice : "", myForm: true};
+  	product = {pname: "", pid: "", pdescription: "", psupplier: "", pdate:"", pquantity: "", pamount: "", pprice: "",unitprice : "", myForm: true, productIdError: false};
   	supplierArray: any = [];
   	constructor(public navCtrl: NavController, private camera: Camera, private transfer: Transfer, private file: File, private filePath: FilePath, public actionSheetCtrl: ActionSheetController, public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController, private sqlite: SQLite, private toast: Toast) {
   		this.product.myForm = true;
@@ -36,12 +37,32 @@ export class ProductPage {
   			this.product.pprice = "";
   		}
 
-        if (this.product.pname != "" && this.product.pid != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "" && this.product.unitprice != "") {
+        if (this.product.pname != "" && this.product.pid != "" && this.product.pdescription != "" && this.product.psupplier != "" && this.product.pdate != "" && this.product.pquantity != "" && this.product.pprice != "" && this.product.pamount != "" && this.product.unitprice != "") {
             this.product.myForm = false;
         } else {
             this.product.myForm = true;
         }
-        
+
+        if (this.product.pid != "") {
+	        this.sqlite.create({
+	            name: 'ionicdb.db',
+	            location: 'default'
+	        }).then((db: SQLiteObject) => {
+	            cursor = db.executeSql('SELECT count(*) as cnt from product where pid = ?',[this.product.pid])
+	            .then(res => { 
+	                console.log(res.rows.item(0).cnt);
+	            	if (res.rows.item(0).cnt == 0) {
+	            		this.product.myForm = false;
+	            		this.product.productIdError = false;
+	            	} else {
+	            		this.product.myForm = true;
+	            		this.product.productIdError = true;
+	            	}
+	            })
+	        .catch(e => console.log(e));
+	        }).catch(e => console.log(e));
+        } 
+        	
     }
 
   	
@@ -95,38 +116,7 @@ export class ProductPage {
 
 		console.log(options)
 		console.log(targetPath)
-		// const fileTransfer: TransferObject = this.transfer.create();
-		// console.log(this.transfer.create())
-
-		// Simulate a call to Dropbox or other service that can
-		// return an image as an ArrayBuffer.
-
-		// var base64 = this.getBase64Image(targetPath);
-		// console.log(base64)
-		  // this.loading = this.loadingCtrl.create({
-		  //   content: 'Uploading...',
-		  // });
-		  // this.loading.present();
-		 
-		  // // Use the FileTransfer to upload the image
-		  // fileTransfer.upload(targetPath, url, options).then(data => {
-		  //   this.loading.dismissAll()
-		  //   this.presentToast('Image succesful uploaded.');
-		  // }, err => {
-		  //   this.loading.dismissAll()
-		  //   this.presentToast('Error while uploading file.');
-		  // });
 	}
-
-	// public getBase64Image(img) {
-	// 	var canvas = document.createElement("canvas");
-	// 	canvas.width = img.width;
-	// 	canvas.height = img.height;
-	// 	var ctx = canvas.getContext("2d");
-	// 	ctx.drawImage(img, 0, 0);
-	// 	var dataURL = canvas.toDataURL("image/png");
-	// 	return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-	// }
 
 	private createFileName() {
 	  var d = new Date(),
@@ -236,12 +226,15 @@ export class ProductPage {
             name: 'ionicdb.db',
             location: 'default'
         }).then((db: SQLiteObject) => {
-            // db.executeSql('DROP TABLE IF EXISTS product', {})
-            db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {})
-            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, psupplier TEXT, pdate TEXT, pquantity INTEGER, pamount INTEGER, pprice INTEGER, unitprice INTEGER, file TEXT)', {})
+            // db.executeSql('CREATE TABLE IF NOT EXISTS expense(rowid INTEGER PRIMARY KEY, date TEXT, quantity INTEGER, type TEXT, description TEXT, amount INTEGER)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS product(rowid INTEGER PRIMARY KEY, pname TEXT, pid INTEGER, pdescription TEXT, file TEXT)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS purchase(rowid INTEGER PRIMARY KEY, productId INTEGER NOT NULL, psupplier TEXT, pquantity INTEGER, pprice INTEGER, unitprice INTEGER)', {})
+            db.executeSql('CREATE TABLE IF NOT EXISTS purchasepayment(rowid INTEGER PRIMARY KEY, productId INTEGER NOT NULL, pdate TEXT, pamount INTEGER)', {})
             .then(res => {
-                db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.product.pdate,this.product.pquantity,'expense',this.product.pname,this.product.pprice])
-                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?,?,?,?,?,?)',[this.product.pname,this.product.pid,this.product.psupplier,this.product.pdate,this.product.pquantity,this.product.pamount,this.product.pprice,this.product.unitprice,this.pathForImage(this.lastImage)])
+                // db.executeSql('INSERT INTO expense VALUES(NULL,?,?,?,?,?)',[this.product.pdate,this.product.pquantity,'expense',this.product.pname,this.product.pprice])
+                db.executeSql('INSERT INTO product VALUES(NULL,?,?,?,?)',[this.product.pname,this.product.pid,this.product.pdescription,this.pathForImage(this.lastImage)])
+                db.executeSql('INSERT INTO purchase VALUES(NULL,?,?,?,?,?)',[this.product.pid,this.product.psupplier,this.product.pquantity,this.product.pprice,this.product.unitprice])
+                db.executeSql('INSERT INTO purchasepayment VALUES(NULL,?,?,?)',[this.product.pid,this.product.pdate,this.product.pamount])
                 .then(res => {
                     console.log(res);
                     this.navCtrl.setRoot(ProductListPage);

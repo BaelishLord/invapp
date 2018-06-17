@@ -22,7 +22,7 @@
 
 .product_div {
   /*background-color : #9e1dc7; */
-  background-color : #51CFB1; 
+  background-color : #118267; 
 }
 .purchase_div {
   /*background-color : #488aff; */
@@ -47,4 +47,23 @@
 .users_div {
   /*background-color : #f5ab3d; */
   background-color : #f5ab3d; 
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: left !important;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.productHeader {
+    text-align: left;
+    color: #fff;
+    font-size: 20px;
 }

@@ -9,9 +9,16 @@ import { RegisterPage } from '../pages/register/register';
 import { HomePage } from '../pages/home/home';
 import { ProductListPage } from '../pages/productlist/productlist';
 import { SupplierListPage } from '../pages/supplierlist/supplierlist';
+import { CustomerListPage } from '../pages/customerlist/customerlist';
 import { SalesListPage } from '../pages/saleslist/saleslist';
 import { PaymentListPage } from '../pages/paymentlist/paymentlist';
 import { ExpenseManagerListPage } from '../pages/expensemanagerlist/expensemanagerlist';
+
+import { StockReportPage } from '../pages/stockreport/stockreport';
+import { SalesReportPage } from '../pages/salesreport/salesreport';
+import { PurchaseReportPage } from '../pages/purchasereport/purchasereport';
+import { PaymentReportPage } from '../pages/paymentreport/paymentreport';
+import { PaymentDuePage } from '../pages/paymentdue/paymentdue';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,7 +27,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
 
-    rootPage: any = HomePage;
+    rootPage: any = PaymentDuePage;
 
     pages: Array<{title: string, component: any}>;
     public alertPresented: any;
@@ -31,6 +38,7 @@ export class MyApp {
         this.pages = [
             { title: 'Home', component: HomePage },
             { title: 'Supplier', component: SupplierListPage },
+            { title: 'Customer', component: CustomerListPage },
             { title: 'Product', component: ProductListPage },
             { title: 'Payment Histoy', component: PaymentListPage },
             { title: 'Sales', component: SalesListPage },
