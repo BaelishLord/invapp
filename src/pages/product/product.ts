@@ -48,7 +48,7 @@ export class ProductPage {
 	            name: 'ionicdb.db',
 	            location: 'default'
 	        }).then((db: SQLiteObject) => {
-	            cursor = db.executeSql('SELECT count(*) as cnt from product where pid = ?',[this.product.pid])
+	            db.executeSql('SELECT count(*) as cnt from product where pid = ?',[this.product.pid])
 	            .then(res => { 
 	                console.log(res.rows.item(0).cnt);
 	            	if (res.rows.item(0).cnt == 0) {

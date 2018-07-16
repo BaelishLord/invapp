@@ -24,7 +24,20 @@
     </ion-list>
     <div *ngIf="selectedItem">
         <ion-card>
-            <!-- <ion-card-header>Product Details</ion-card-header> -->
+            <ion-row>
+                <ion-col col-6>
+                    <button ion-button icon-left clear small>
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Sales Add</div>
+                    </button>
+                </ion-col>
+                <ion-col col-6>
+                    <button ion-button icon-left clear small>
+                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                        <div>Sales Add</div>
+                    </button>
+                </ion-col>
+            </ion-row>
             <img style="height:300px !important" src="{{selectedItem.file}}" />
             <ion-item>
                 <ion-icon name="star" item-start large></ion-icon>
@@ -82,25 +95,6 @@
                     </button>
                 </ion-col>
             </ion-row>
-            <!-- <ion-row>
-                <ion-col>
-                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
-                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
-                        <div>Delete</div>
-                    </button>
-                </ion-col>
-                <ion-col>
-                    <button ion-button icon-left clear small (click)="deleteData(selectedItem.rowid)">
-                        <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
-                        <div>Delete</div>
-                    </button>
-                </ion-col>
-            </ion-row> -->
         </ion-card>
     </div>
-    <!-- <ion-fab right bottom>
-        <button ion-fab color="light">
-           <ion-icon name="search"></ion-icon>
-        </button>
-    </ion-fab> -->
 </ion-content>

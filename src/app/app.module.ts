@@ -25,6 +25,8 @@ import { PurchaseReportPage } from '../pages/purchasereport/purchasereport';
 import { PaymentReportPage } from '../pages/paymentreport/paymentreport';
 import { PaymentDuePage } from '../pages/paymentdue/paymentdue';
 
+import { ReportsPage } from '../pages/reports/reports';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -57,7 +59,8 @@ import { Toast } from '@ionic-native/toast';
     SalesReportPage,
     PurchaseReportPage,
     PaymentReportPage,
-    PaymentDuePage
+    PaymentDuePage,
+    ReportsPage
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,8 @@ import { Toast } from '@ionic-native/toast';
     SalesReportPage,
     PurchaseReportPage,
     PaymentReportPage,
-    PaymentDuePage
+    PaymentDuePage,
+    ReportsPage
   ],
   providers: [
     StatusBar,

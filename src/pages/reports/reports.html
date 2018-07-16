@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Reports
+    </ion-title>
+    
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-6>
+                <div class="box height_100px text-center product_div" (click)='clickLink("payment");'>
+                    <a href="javascipt:;">Payment Report</a>
+                </div>
+            </ion-col>
+            <ion-col col-6>
+                <div class="box height_100px text-center product_div" (click)='clickLink("stock");'>
+                    <a href="javascript:;">Stock Report</a>
+                </div>
+            </ion-col>
+            <ion-col col-12>
+                <div class="box height_100px text-center product_div" (click)='clickLink("sales");'>
+                    <a href="javascript:;">Sales Report</a>
+                </div>
+            </ion-col>
+            <ion-col col-6>
+                <div class="box height_100px text-center product_div" (click)='clickLink("purchase");'>
+                    <a href="javascipt:;">Purchase Report</a>
+                </div>
+            </ion-col>
+            <ion-col col-6>
+                <div class="box height_100px text-center product_div" (click)='clickLink("paymentdue");'>
+                    <a href="javascipt:;">Payment Due Report</a>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

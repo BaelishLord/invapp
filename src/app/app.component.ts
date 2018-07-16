@@ -20,6 +20,8 @@ import { PurchaseReportPage } from '../pages/purchasereport/purchasereport';
 import { PaymentReportPage } from '../pages/paymentreport/paymentreport';
 import { PaymentDuePage } from '../pages/paymentdue/paymentdue';
 
+import { ReportsPage } from '../pages/reports/reports';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -27,7 +29,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
 
-    rootPage: any = PaymentDuePage;
+    rootPage: any = HomePage;
 
     pages: Array<{title: string, component: any}>;
     public alertPresented: any;
@@ -42,7 +44,8 @@ export class MyApp {
             { title: 'Product', component: ProductListPage },
             { title: 'Payment Histoy', component: PaymentListPage },
             { title: 'Sales', component: SalesListPage },
-            { title: 'Expense Manager', component: ExpenseManagerListPage }
+            { title: 'Expense Manager', component: ExpenseManagerListPage },
+            { title: 'Reports', component: ReportsPage }
         ];
 
     }
